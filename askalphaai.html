@@ -100,6 +100,7 @@
             display: flex;
             justify-content: space-between;
             width: 100%;
+            align-items: center;
         }
         .header img {
             max-width: 240px; /* 20% larger than 200px (200 * 1.2) */
@@ -109,6 +110,7 @@
             text-align: center;
             flex-grow: 1;
             padding: 0 20px; /* Add some padding to separate text from images */
+            white-space: normal; /* Allow text to wrap */
         }
         .header .title {
             font-size: 28px; /* Bigger font for Ask Alpha AI */
@@ -314,7 +316,7 @@
                 <img src="/images/bunnyAlpha.png" alt="Bunny Alpha" onload="console.log('Loaded: bunnyAlpha.png')" onerror="console.log('Failed to load bunnyAlpha.png')">
                 <div class="title-container">
                     <div class="title">Ask Alpha AI</div>
-                    <div class="subtitle">The brains behind alphaTOOLS</div>
+                    <div class="subtitle">The brains behind<br>alphaTOOLS</div>
                 </div>
                 <img src="/images/babyalpha.png" alt="Baby Alpha" onload="console.log('Loaded: babyalpha.png')" onerror="console.log('Failed to load babyalpha.png')">
             </div>
@@ -376,7 +378,7 @@
                 data.data.forEach(model => {
                     const option = document.createElement('option');
                     option.value = model.id;
-                    option.textContent = `${model.id} (${model.traits ? model.traits.join(', ') : getModelDescription(model.id)})`;
+                    option.textContent = `${model.id} (${getModelDescription(model.id)})`;
                     select.appendChild(option);
                 });
                 // Add Catalina manually
