@@ -19,6 +19,7 @@
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
+            padding-top: 280px; /* Increased to avoid overlap with top buttons */
         }
 
         .sidebar {
@@ -29,6 +30,7 @@
             height: 100%;
             overflow-y: auto;
             transition: transform 0.3s ease;
+            top: 0;
         }
 
         .sidebar.hidden {
@@ -111,7 +113,7 @@
             margin-bottom: 20px;
         }
         #modelDetails {
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Increased gap to prevent overlap */
             padding: 10px;
             background-color: #1e1e1e;
             border-radius: 5px;
@@ -148,12 +150,12 @@
             padding: 10px 20px;
             border: none;
             border-radius: 0 5px 5px 0;
-            background-color: #b85b1c;
+            background-color: #c66b2c; /* Lighter burnt orange to match settings */
             color: #fff;
             cursor: pointer;
         }
         #send-btn:hover {
-            background-color: #a34f19;
+            background-color: #d07b3c; /* Lighter hover shade */
         }
         #file-upload {
             margin-top: 20px;
@@ -194,7 +196,7 @@
         }
 
         .wallet-connect button {
-            background-color: #b85b1c;
+            background-color: #c66b2c; /* Lighter burnt orange to match settings */
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -203,7 +205,7 @@
         }
 
         .wallet-connect button:hover {
-            background-color: #a34f19;
+            background-color: #d07b3c; /* Lighter hover shade */
         }
 
         .wallet-status {
