@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>alphaT00LS</title>
-    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="icon" type="image/png" href="/images/favicon.png" sizes="64x64" onload="console.log('Favicon loaded: /images/favicon.png')" onerror="console.log('Failed to load favicon.png')">
     <style>
         * {
             margin: 0;
@@ -35,7 +35,7 @@
         }
 
         .sidebar .logo-image {
-            width: 40%;
+            width: 80%; /* 2x bigger from 40% */
             transform: scaleX(-1);
             margin-bottom: 20px;
             display: block;
@@ -59,9 +59,40 @@
         }
 
         .sidebar ul li img {
-            width: 72px; /* 3x bigger (24px * 3) */
-            height: 72px; /* 3x bigger (24px * 3) */
+            width: 72px; /* Base size for other images */
+            height: 72px; /* Base size for other images */
             margin-right: 10px;
+        }
+
+        /* Specific adjustments */
+        .sidebar ul li:nth-child(4) img { /* alphaMAK3R */
+            width: 79.2px; /* 72 * 1.1 */
+            height: 93.6px; /* 72 * 1.3 */
+        }
+
+        .sidebar ul li:nth-child(5) img { /* Pump.FUN Tool-Kit */
+            width: 50.4px; /* 72 * 0.7 */
+            height: 50.4px; /* 72 * 0.7 */
+        }
+
+        .sidebar ul li:nth-child(6) img { /* ChainMail */
+            height: 64.8px; /* 72 * 0.9 */
+            width: 72px; /* Unchanged */
+        }
+
+        .sidebar ul li:nth-child(7) img { /* alphaRAIDER */
+            width: 108px; /* 72 * 1.5 */
+            height: 90px; /* 72 * 1.25 */
+        }
+
+        .sidebar ul li:nth-child(8) img { /* alphaTUNES */
+            height: 64.8px; /* 72 * 0.9 */
+            width: 72px; /* Unchanged */
+        }
+
+        .sidebar ul li:nth-child(12) img { /* About Us */
+            height: 64.8px; /* 72 * 0.9 */
+            width: 72px; /* Unchanged */
         }
 
         .sidebar ul li .mirrored {
@@ -86,9 +117,10 @@
         }
 
         .banner {
-            width: 100%;
-            height: auto;
+            width: 110%; /* 10% wider than 100% of container, adjusted for sidebar */
+            height: auto; /* Maintain aspect ratio */
             margin-bottom: 20px;
+            transform: scaleY(0.95); /* 5% shorter */
         }
 
         .hero {
@@ -118,8 +150,8 @@
         }
 
         .contact-links a img {
-            width: 40px;
-            height: 40px;
+            width: 52px; /* 40 * 1.3 */
+            height: 52px; /* 40 * 1.3 */
             transition: transform 0.2s;
         }
 
@@ -165,8 +197,8 @@
             }
 
             .contact-links a img {
-                width: 32px;
-                height: 32px;
+                width: 42px; /* 32 * 1.3, rounded */
+                height: 42px; /* 32 * 1.3, rounded */
             }
         }
     </style>
@@ -184,9 +216,9 @@
             <li><img src="/images/chainmail.png" alt="ChainMail Icon" onload="console.log('Loaded: chainmail.png')" onerror="console.log('Failed to load chainmail.png')"><a href="#">ChainMail</a></li>
             <li><img src="/images/fbraider.png" alt="alphaRAIDER Icon" onload="console.log('Loaded: fbraider.png')" onerror="console.log('Failed to load fbraider.png')"><a href="#">alphaRAIDER</a></li>
             <li><img src="/images/spotify.png" alt="alphaTUNES Icon" onload="console.log('Loaded: spotify.png')" onerror="console.log('Failed to load spotify.png')"><a href="#">alphaTUNES</a></li>
-            <li><img src="/images/whale.jpg" alt="Whale Enforcer Icon" onload="console.log('Loaded: whale.jpg')" onerror="console.log('Failed to load whale.jpg')"><a href="#">Whale Enforcer</a></li>
+            <li><img src="/images/whale.ong" alt="Whale Enforcer Icon" onload="console.log('Loaded: whale.png')" onerror="console.log('Failed to load whale.png')"><a href="#">Whale Enforcer</a></li>
             <li><img src="/images/solanarocket.webp" alt="News Icon" onload="console.log('Loaded: solanarocket.webp')" onerror="console.log('Failed to load solanarocket.webp')"><a href="#">News</a></li>
-            <li><img src="/images/roadmap.png" alt="Roadmap Icon" onload="console.log('Loaded: roadmap.png')" onerror="console.log('Failed to load roadmap.png')"><a href="#">Roadmap</a></li>
+            <li><img src="/images/roadmap3.webp" alt="Roadmap Icon" onload="console.log('Loaded: roadmap3.webp')" onerror="console.log('Failed to load roadmap3.webp')"><a href="#">Roadmap</a></li>
             <li><img src="/images/aboutUs.png" alt="About Us Icon" onload="console.log('Loaded: aboutUs.png')" onerror="console.log('Failed to load aboutUs.png')"><a href="#">About Us</a></li>
         </ul>
     </div>
