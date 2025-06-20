@@ -229,6 +229,12 @@
         .menu-toggle:hover {
             background-color: #a34f19;
         }
+        .button-row {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            gap: 20px;
+        }
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-250px);
@@ -242,6 +248,10 @@
             }
             .menu-toggle {
                 display: block;
+            }
+            .button-row {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -257,17 +267,17 @@
         <img src="/images/example1.png" alt="alphaT00LS Logo" class="logo-image" onload="console.log('Loaded: example1.png')" onerror="console.log('Failed to load example1.png')">
         <div class="logo">alphaT00LS</div>
         <ul>
-            <li><a href="/index.html">Home</a></li>
+            <li><a href="#">Home</a></li>
             <li><a href="/askalphaai.html">Ask AlphaAI</a></li>
-            <li><a href="/alphaMAK3R.html">alphaMAK3R</a></li>
-            <li><a href="/pumpfun-toolkit.html">Pump.FUN Tool-Kit</a></li>
-            <li><a href="/chainmail.html">ChainMail</a></li>
-            <li><a href="/alpharaider.html">alphaRAIDER</a></li>
-            <li><a href="/alphatunes.html">alphaTUNES</a></li>
-            <li><a href="/whale-enforcer.html">Whale Enforcer</a></li>
-            <li><a href="/news.html">News</a></li>
-            <li><a href="/roadmap.html">Roadmap</a></li>
-            <li><a href="/aboutus.html">About Us</a></li>
+            <li><a href="/alphaMAK3R.html" class="active">alphaMAK3R</a></li>
+            <li><a href="#">Pump.FUN Tool-Kit</a></li>
+            <li><a href="#">ChainMail</a></li>
+            <li><a href="#">alphaRAIDER</a></li>
+            <li><a href="#">alphaTUNES</a></li>
+            <li><a href="#">Whale Enforcer</a></li>
+            <li><a href="#">News</a></li>
+            <li><a href="#">Roadmap</a></li>
+            <li><a href="#">About Us</a></li>
         </ul>
     </div>
     <div class="main-content">
@@ -290,10 +300,26 @@
                 <div id="tokenInfo" class="token-info small-text"></div>
             </div>
             <div class="input-group">
-                <label>Makers/Loops: <input type="number" id="numMakers" min="1" value="1" oninput="updateSettings()"></label>
-                <label>Buy Amount (SOL): <input type="number" id="buyAmount" step="0.001" value="0.05" oninput="updateSettings()"></label>
-                <label>Buy Cycle Min (s): <input type="number" id="buyCycleMin" min="5" value="30" oninput="updateSettings()"></label>
-                <label>Max (s): <input type="number" id="buyCycleMax" min="10" value="40" oninput="updateSettings()"></label>
+                <label>Makers/Loops: <input type="number" id="numMakers" min="1" value="1" oninput="updateSettings()">
+                    <span class="small-text">The number of makers you have will be the number of wallets that will be buying and selling within your chosen buy cycle duration.</span>
+                </label>
+                <label>Buy Amount (SOL): <input type="number" id="buyAmount" step="0.001" value="0.05" oninput="updateSettings()">
+                    <span class="small-text">The volume maker will be buying and selling random amounts ± your set buy amount.</span>
+                </label>
+                <label>Buy Cycle Min (s): <input type="number" id="buyCycleMin" min="5" value="30" oninput="updateSettings()">
+                    <span class="small-text">Buy Cycle adjusts how organic your buys look on your chart or how quickly they're happening. This will also affect how long your bot will run overall.</span>
+                </label>
+                <label>Max (s): <input type="number" id="buyCycleMax" min="10" value="40" oninput="updateSettings()">
+                    <span class="small-text">Buy Cycle adjusts how organic your buys look on your chart or how quickly they're happening. This will also affect how long your bot will run overall.</span>
+                </label>
+            </div>
+            <div class="input-group">
+                <button onclick="saveSettings()">Save</button>
+                <button onclick="clearSettings()">Clear</button>
+            </div>
+            <div id="settingsSummary" class="section" style="display: none;">
+                <h2>Settings Summary</h2>
+                <div id="summaryContent" class="small-text"></div>
             </div>
         </div>
         <div class="section">
@@ -327,36 +353,17 @@
                 <button onclick="saveSettings()">Save</button>
                 <button onclick="clearSettings()">Clear</button>
             </div>
-            <div id="summary" class="small-text" style="display: none;"></div>
-        </div>
-        <div class="section">
-            <h2>Funds</h2>
-            <div class="input-group">
-                <button onclick="window.location.href='/funds.html'">Funds</button>
+            <div id="holderSummary" class="section" style="display: none;">
+                <h2>Holder Summary</h2>
+                <div id="holderSummaryContent" class="small-text"></div>
             </div>
-            <div id="fundsStatus" class="status"></div>
         </div>
-        <div class="section">
-            <h2>Market Control</h2>
-            <div class="input-group">
-                <button id="startButton" onclick="startMarketMaker()">Start</button>
-                <button id="stopButton" onclick="stopMarketMaker()" disabled>Stop</button>
-            </div>
-            <div id="marketStatus" class="status"></div>
-        </div>
-        <div class="section">
-            <h2>AlphaAI Assistance</h2>
-            <div class="input-group">
-                <button onclick="askAlphaAI()">Ask AlphaAI</button>
-            </div>
-            <div id="alphaAIResponse" class="status"></div>
-        </div>
-        <div class="section">
-            <h2>Operator Access</h2>
-            <div class="input-group">
-                <button onclick="window.location.href='/operator-panel.html'">Operator Panel</button>
-            </div>
-            <div id="operatorStatus" class="status"></div>
+        <div class="button-row">
+            <button onclick="window.location.href='/funds.html'">Funds</button>
+            <button onclick="askAlphaAI()">Ask AlphaAI</button>
+            <button id="startButton" onclick="startMarketMaker()">Start</button>
+            <button id="stopButton" onclick="stopMarketMaker()" disabled>Stop</button>
+            <button onclick="window.location.href='/operator-panel.html'">Operator Panel</button>
         </div>
     </div>
     <div class="contact-links">
@@ -534,7 +541,8 @@
             document.getElementById('numHolders').disabled = true;
             document.querySelectorAll('input[name="buyStrategy"]').forEach(cb => cb.checked = false);
             document.getElementById('tokenInfo').innerHTML = '';
-            document.getElementById('summary').style.display = 'none';
+            document.getElementById('settingsSummary').style.display = 'none';
+            document.getElementById('holderSummary').style.display = 'none';
             localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
         }
 
@@ -543,19 +551,30 @@
                 const totalHolders = settings.numHolders;
                 const holderPercentage = totalHolders > 0 ? (settings.holderFundingAmount * totalHolders / 100) : 0;
                 const expectedVolume = settings.buyAmount * settings.numMakers * 100;
-                document.getElementById('summary').innerHTML = `
-                    <strong>Summary:</strong><br>
+                const estimatedRuntime = (settings.buyCycleMin + settings.buyCycleMax) / 2 * settings.numMakers * 60; // Minutes to hours
+                document.getElementById('summaryContent').innerHTML = `
+                    <strong>Settings Summary:</strong><br>
                     Token: ${settings.tokenInfo.name} (${settings.tokenInfo.symbol})<br>
                     <img src="${settings.tokenInfo.image}" alt="Token Image" style="max-width: 50px;"><br>
                     Price: ${settings.tokenInfo.price} | Market Cap: ${settings.tokenInfo.marketCap}<br>
                     Settings: ${settings.numMakers} Makers, Buy Amount: ${settings.buyAmount} SOL, Cycle: ${settings.buyCycleMin}-${settings.buyCycleMax}s<br>
-                    ${totalHolders > 0 ? `Holders: ${totalHolders}, Funding: ${settings.holderFundingAmount} SOL each, Strategy: ${settings.buyStrategy || 'None'}` : 'No additional holders'}<br>
-                    Expected Volume: ~${expectedVolume.toFixed(2)} SOL<br>
-                    Holder Percentage: ${holderPercentage.toFixed(2)}%
+                    Estimated Volume: ~${expectedVolume.toFixed(2)} SOL<br>
+                    Estimated Runtime: ~${(estimatedRuntime / 3600).toFixed(1)} hours
                 `;
-                document.getElementById('summary').style.display = 'block';
+                document.getElementById('settingsSummary').style.display = 'block';
+                if (totalHolders > 0) {
+                    document.getElementById('holderSummaryContent').innerHTML = `
+                        <strong>Holder Summary:</strong><br>
+                        Holders: ${totalHolders}, Funding: ${settings.holderFundingAmount} SOL each, Strategy: ${settings.buyStrategy || 'None'}<br>
+                        Holder Percentage: ${holderPercentage.toFixed(2)}%
+                    `;
+                    document.getElementById('holderSummary').style.display = 'block';
+                } else {
+                    document.getElementById('holderSummary').style.display = 'none';
+                }
             } else {
-                document.getElementById('summary').style.display = 'none';
+                document.getElementById('settingsSummary').style.display = 'none';
+                document.getElementById('holderSummary').style.display = 'none';
             }
         }
 
@@ -806,5 +825,9 @@
 
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        async function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         }
     </script>
