@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>alphaMAK3R - alphaT00LS</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #1e1e1e;
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.hidden {
+            transform: translateX(-250px);
+        }
+
+        .sidebar .logo-image {
+            width: 100%;
+            transform: scaleX(-1);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #b85b1c;
+            text-align: center;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar ul li img {
+            display: none;
+        }
+
+        .sidebar ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.2s;
+        }
+
+        .sidebar ul li a:hover {
+            color: #b85b1c;
+        }
+
+        .sidebar ul li a[href="/alphaMAK3R.html"] {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            flex-grow: 1;
+            width: 80%;
+            box-sizing: border-box;
+            margin-top: 96px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .header .image-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: center;
+        }
+        .header img {
+            max-width: 240px;
+            height: auto;
+        }
+        .header .title-container {
+            text-align: center;
+            flex-grow: 1;
+            padding: 0 20px;
+            white-space: normal;
+        }
+        .header .title {
+            font-size: 28px;
+            margin: 0;
+        }
+        .header .subtitle {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .section input, .section select, .section button {
+            padding: 5px;
+            margin-right: 10px;
+        }
+        .section .status {
+            margin-top: 10px;
+            color: #ffcc00;
+        }
+
+        .wallet-connect {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+        }
+
+        .wallet-connect img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            transition: transform 0.2s;
+        }
+
+        .wallet-connect img:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .wallet-connect button {
+            background-color: #b85b1c;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .wallet-connect button:hover {
+            background-color: #a34f19;
+        }
+
+        .wallet-status {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #1e1e1e;
+            border-radius: 5px;
+        }
+
+        .contact-links {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .contact-links a img {
+            width: 52px;
+            height: 52px;
+            transition: transform 0.2s;
+        }
+
+        .contact-links a img:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #b85b1c;
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .menu-toggle:hover {
+            background-color: #a34f19;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-250px);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="wallet-connect">
+        <img src="/images/settings.png" alt="Settings" onload="console.log('Loaded: settings.png')" onerror="console.log('Failed to load settings.png')">
+        <button onclick="connectWallet()">Connect Wallet</button>
+        <div id="wallet-status" class="wallet-status"></div>
+    </div>
+    <div class="sidebar" id="sidebar">
+        <img src="/images/alphaAI.png" alt="Mirrored AlphaAI Logo" class="logo-image" onload="console.log('Loaded: alphaAI.png')" onerror="console.log('Failed to load alphaAI.png')">
+        <div class="logo">alphaT00LS</div>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="/askalphaai.html">Ask AlphaAI</a></li>
+            <li><a href="/alphaMAK3R.html">alphaMAK3R</a></li>
+            <li><a href="#">Pump.FUN Tool-Kit</a></li>
+            <li><a href="#">ChainMail</a></li>
+            <li><a href="#">alphaRAIDER</a></li>
+            <li><a href="#">alphaTUNES</a></li>
+            <li><a href="#">Whale Enforcer</a></li>
+            <li><a href="#">News</a></li>
+            <li><a href="#">Roadmap</a></li>
+            <li><a href="#">About Us</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <div class="image-row">
+                <img src="/images/bunnyAlpha.png" alt="Bunny Alpha" onload="console.log('Loaded: bunnyAlpha.png')" onerror="console.log('Failed to load bunnyAlpha.png')">
+                <div class="title-container">
+                    <div class="title">alphaMAK3R</div>
+                    <div class="subtitle">The market making<br>tool for alphaTOOLS</div>
+                </div>
+                <img src="/images/babyalpha.png" alt="Baby Alpha" onload="console.log('Loaded: babyalpha.png')" onerror="console.log('Failed to load babyalpha.png')">
+            </div>
+        </div>
+        <div class="section">
+            <h2>Settings</h2>
+            <label>Token CA: <input type="text" id="tokenCA" placeholder="Enter Token CA"></label>
+            <label>Makers: <input type="number" id="numMakers" min="1" value="1"></label>
+            <label>Buy Amount (SOL): <input type="number" id="buyAmount" step="0.001" value="0.05"></label>
+            <label>Buy Cycle Min (s): <input type="number" id="buyCycleMin" min="5" value="30"></label>
+            <label>Buy Cycle Max (s): <input type="number" id="buyCycleMax" min="10" value="40"></label>
+            <label>Keep Makers: <input type="checkbox" id="keepMakersEnabled"></label>
+            <label>Keep Makers %: <input type="number" id="keepMakersPercent" min="0" max="100" value="0" disabled></label>
+            <button onclick="saveSettings()">Save Settings</button>
+            <div id="settingsStatus" class="status"></div>
+        </div>
+        <div class="section">
+            <h2>Funds</h2>
+            <button onclick="fundWallets()">Fund Wallets</button>
+            <button onclick="viewFunds()">View Funds</button>
+            <button onclick="recoverFunds()">Recover Funds</button>
+            <div id="fundsStatus" class="status"></div>
+        </div>
+        <div class="section">
+            <h2>Market Making</h2>
+            <button onclick="startMarketMaker()">Start Market Maker</button>
+            <button onclick="stopMarketMaker()">Stop Market Maker</button>
+            <div id="marketStatus" class="status"></div>
+        </div>
+        <div class="section">
+            <h2>AlphaAI Assistance</h2>
+            <input type="text" id="alphaAIQuestion" placeholder="Ask AlphaAI (e.g., 'How much volume with 1 SOL?')">
+            <button onclick="askAlphaAI()">Ask</button>
+            <div id="alphaAIResponse" class="status"></div>
+        </div>
+        <div class="section">
+            <h2>Reports</h2>
+            <button onclick="viewReports()">View Reports</button>
+            <div id="reportsStatus" class="status"></div>
+        </div>
+    </div>
+    <div class="contact-links">
+        <a href="https://x.com/alphat00ls" target="_blank"><img src="/images/x.webp" alt="X" onload="console.log('Loaded: x.webp')" onerror="console.log('Failed to load x.webp')"></a>
+        <a href="https://t.me/alphat00ls" target="_blank"><img src="/images/telegram.png" alt="Telegram" onload="console.log('Loaded: telegram.png')" onerror="console.log('Failed to load telegram.png')"></a>
+        <a href="https://www.facebook.com/profile.php?id=61574135317387" target="_blank"><img src="/images/facebook.png" alt="Facebook" onload="console.log('Loaded: facebook.png')" onerror="console.log('Failed to load facebook.png')"></a>
+    </div>
+
+    <script>
+        const API_URL = 'https://157.230.213.252/api'; // Updated to your Droplet IP
+
+        let settings = {
+            tokenCA: null,
+            tokenInfo: null,
+            numMakers: 1,
+            buyAmount: 0.05,
+            buyCycleMin: 30,
+            buyCycleMax: 40,
+            keepMakersEnabled: false,
+            keepMakersPercent: 0,
+            isRunning: false,
+            userFunds: {},
+            makerLoops: [],
+            fundedAmount: 0,
+            connectedWallet: null,
+            isVerified: false
+        };
+
+        // Phantom Wallet Integration
+        async function connectWallet() {
+            if ("solana" in window) {
+                const phantom = window.solana;
+                try {
+                    await phantom.connect();
+                    settings.connectedWallet = phantom.publicKey.toString();
+                    document.getElementById('wallet-status').style.display = 'block';
+                    const tokenBalance = await checkTokenBalance(settings.connectedWallet);
+                    settings.isVerified = tokenBalance >= 1000000; // Using MIN_TOKEN_REQUIREMENT from config
+                    document.getElementById('wallet-status').textContent = `Connected: ${settings.connectedWallet.slice(0, 6)}...${settings.connectedWallet.slice(-4)}${settings.isVerified ? ' (Verified)' : ' (Not Verified - Need 1,000,000 tokens)'}`;
+                    console.log('Connected to Phantom wallet:', settings.connectedWallet, 'Token Balance:', tokenBalance);
+                } catch (error) {
+                    document.getElementById('wallet-status').style.display = 'block';
+                    document.getElementById('wallet-status').textContent = `Connection failed: ${error.message}`;
+                    console.error('Phantom connection error:', error);
+                }
+            } else {
+                document.getElementById('wallet-status').style.display = 'block';
+                document.getElementById('wallet-status').textContent = 'Please install Phantom wallet extension.';
+                alert('Please install the Phantom wallet extension to connect.');
+            }
+        }
+
+        async function checkTokenBalance(walletAddress) {
+            const connection = new solanaWeb3.Connection('https://api.mainnet-beta.solana.com', 'confirmed'); // Default RPC
+            try {
+                const tokenAccounts = await connection.getTokenAccountsByOwner(new solanaWeb3.PublicKey(walletAddress), { mint: new solanaWeb3.PublicKey('YourTokenAddressHere') }); // Replace with TOKEN_CA
+                if (!tokenAccounts.value.length) return 0;
+                const balance = await connection.getTokenAccountBalance(tokenAccounts.value[0].pubkey);
+                return balance.value.uiAmount || 0;
+            } catch (error) {
+                console.error(`Token balance check failed: ${error.message}`);
+                return 0;
+            }
+        }
+
+        // Utility Functions
+        async function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function sendTransaction(transaction, signers) {
+            const connection = new solanaWeb3.Connection('https://api.mainnet-beta.solana.com', 'confirmed'); // Default RPC
+            try {
+                const { blockhash } = await connection.getLatestBlockhash();
+                transaction.recentBlockhash = blockhash;
+                transaction.sign(...signers);
+                const signedTransaction = await window.solana.signTransaction(transaction);
+                const signature = await connection.sendRawTransaction(signedTransaction.serialize());
+                await connection.confirmTransaction(signature);
+                return { success: true, signature };
+            } catch (error) {
+                console.error(`Transaction failed: ${error.message}`);
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function saveSettings() {
+            if (!settings.isVerified) {
+                document.getElementById('settingsStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
+                return;
+            }
+            settings.tokenCA = document.getElementById('tokenCA').value || 'YourTokenAddressHere'; // Fallback
+            settings.numMakers = parseInt(document.getElementById('numMakers').value);
+            settings.buyAmount = parseFloat(document.getElementById('buyAmount').value);
+            settings.buyCycleMin = parseInt(document.getElementById('buyCycleMin').value);
+            settings.buyCycleMax = parseInt(document.getElementById('buyCycleMax').value);
+            settings.keepMakersEnabled = document.getElementById('keepMakersEnabled').checked;
+            settings.keepMakersPercent = parseInt(document.getElementById('keepMakersPercent').value) || 0;
+            document.getElementById('keepMakersPercent').disabled = !settings.keepMakersEnabled;
+            if (settings.tokenCA) {
+                const response = await fetch(`${API_URL}/token-info?tokenCA=${settings.tokenCA}`);
+                settings.tokenInfo = await response.json();
+            }
+            localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
+            document.getElementById('settingsStatus').textContent = 'Settings saved!';
+            setTimeout(() => document.getElementById('settingsStatus').textContent = '', 2000);
+        }
+
+        async function fundWallets() {
+            if (!settings.isVerified) {
+                document.getElementById('fundsStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
+                return;
+            }
+            const minRequiredAmount = (settings.numMakers * settings.buyAmount) * 1.5 + 0.12 * (1 + 3 / 100);
+            document.getElementById('fundsStatus').textContent = `Requesting approval to transfer ${minRequiredAmount.toFixed(4)} SOL to funding wallet.`;
+            const { SystemProgram, Transaction, LAMPORTS_PER_SOL } = solanaWeb3;
+            const fromWallet = window.solana.publicKey;
+            const toWallet = new solanaWeb3.PublicKey('AkkW99MPWcV9AtWQBscanVUQGB9W8uZsqmvJdE4mXcFN'); // Example funding wallet
+            const transaction = new Transaction().add(
+                SystemProgram.transfer({
+                    fromPubkey: fromWallet,
+                    toPubkey: toWallet,
+                    lamports: Math.floor(minRequiredAmount * LAMPORTS_PER_SOL)
+                })
+            );
+            const result = await sendTransaction(transaction, []);
+            if (result.success) {
+                document.getElementById('fundsStatus').textContent = `Transaction approved! Funding in progress (Signature: ${result.signature}).`;
+                setTimeout(() => document.getElementById('fundsStatus').textContent = 'Wallets funded!', 5000);
+            } else {
+                document.getElementById('fundsStatus').textContent = `Transaction failed: ${result.error}`;
+            }
+        }
+
+        async function viewFunds() {
+            if (!settings.isVerified) {
+                document.getElementById('fundsStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
+                return;
+            }
+            const response = await fetch(`${API_URL}/view-funds?wallet=${settings.connectedWallet}`);
+            const data = await response.json();
+            document.getElementById('fundsStatus').textContent = data.message || 'No wallets with recoverable funds.';
+        }
+
+        async function recoverFunds() {
+            if (!settings.isVerified) {
+                document.getElementById('fundsStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
+                return;
+            }
+            const walletAddress = settings.connectedWallet;
+            document.getElementById('fundsStatus').textContent = `Requesting approval to recover funds to ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}.`;
+            const response = await fetch(`${API_URL}/recover-funds`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ walletAddress })
+            });
+            const data = await response.json();
+            document.getElementById('fundsStatus').textContent = data.message || 'Recovery failed.';
+        }
+
+        async function startMarketMaker() {
+            if (!settings.isVerified) {
+                document.getElementById('marketStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
+                return;
+            }
+            if (!settings.tokenCA || !settings.numMakers || !settings.buyAmount || !settings.buyCycleMin || !settings.buyCycleMax) {
+                document.getElementById('marketStatus').textContent = 'Please set all settings first!';
+                return;
+            }
+            const response = await fetch(`${API_URL}/start-market-maker`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            });
+            const data = await response.json();
+            settings.isRunning = true;
+            localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
+            document.getElementById('marketStatus').textContent = data.message || 'Market maker started!';
+        }
+
+        async function stopMarketMaker() {
+            if (!settings.isVerified) {
+                document.getElementById('marketStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
+                return;
+            }
+            const response = await fetch(`${API_URL}/stop-market-maker`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+            settings.isRunning = false;
+            localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
+            document.getElementById('marketStatus').textContent = data.message || 'Market maker stopped!';
+        }
+
+        async function askAlphaAI() {
+            if (!settings.isVerified) {
+                document.getElementById('alphaAIResponse').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
+                return;
+            }
+            const question = document.getElementById('alphaAIQuestion').value;
+            const response = await fetch(`${API_URL}/alpha-ai`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question, wallet: settings.connectedWallet })
+            }).then(res => res.json()).then(data => data.response);
+            document.getElementById('alphaAIResponse').textContent = response || 'No response from AlphaAI.';
+        }
+
+        async function viewReports() {
+            if (!settings.isVerified) {
+                document.getElementById('reportsStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
+                return;
+            }
+            const tokenCA = settings.tokenCA;
+            if (!tokenCA) {
+                document.getElementById('reportsStatus').textContent = 'No token CA set!';
+                return;
+            }
+            const response = await fetch(`${API_URL}/view-reports?tokenCA=${tokenCA}&wallet=${settings.connectedWallet}`);
+            const data = await response.json();
+            document.getElementById('reportsStatus').textContent = data.message || 'No reports available.';
+        }
+
+        // Initialize settings from localStorage
+        const savedSettings = localStorage.getItem('alphaMAK3RSettings');
+        if (savedSettings) settings = JSON.parse(savedSettings);
+        document.getElementById('tokenCA').value = settings.tokenCA || '';
+        document.getElementById('numMakers').value = settings.numMakers;
+        document.getElementById('buyAmount').value = settings.buyAmount;
+        document.getElementById('buyCycleMin').value = settings.buyCycleMin;
+        document.getElementById('buyCycleMax').value = settings.buyCycleMax;
+        document.getElementById('keepMakersEnabled').checked = settings.keepMakersEnabled;
+        document.getElementById('keepMakersPercent').value = settings.keepMakersPercent;
+        document.getElementById('keepMakersPercent').disabled = !settings.keepMakersEnabled;
+
+        document.getElementById('keepMakersEnabled').addEventListener('change', () => {
+            document.getElementById('keepMakersPercent').disabled = !document.getElementById('keepMakersEnabled').checked;
+        });
+
+        // Sidebar toggle function
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
