@@ -114,6 +114,14 @@
             font-size: 24px;
             margin-bottom: 10px;
         }
+        .section .medium-text {
+            font-size: 16px; /* Slightly bigger font for Additional Holders */
+            margin-bottom: 5px;
+        }
+        .section .small-text {
+            font-size: 12px; /* Smaller font for descriptions */
+            margin-bottom: 10px;
+        }
         .section input, .section select, .section button {
             padding: 5px;
             margin-right: 10px;
@@ -190,12 +198,6 @@
         .menu-toggle:hover {
             background-color: #a34f19;
         }
-        .small-text {
-            font-size: 12px;
-        }
-        .medium-text {
-            font-size: 16px;
-        }
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-250px);
@@ -258,7 +260,7 @@
                 </label>
                 <div id="tokenInfo" class="small-text"></div>
             </div>
-            <div>
+            <div style="display: flex; gap: 10px;">
                 <label>Makers/Loops: <input type="number" id="numMakers" min="1" value="1" oninput="updateSettings()"></label>
                 <label>Buy Amount (SOL): <input type="number" id="buyAmount" step="0.001" value="0.05" oninput="updateSettings()"></label>
                 <label>Buy Cycle Min (s): <input type="number" id="buyCycleMin" min="5" value="30" oninput="updateSettings()"></label>
@@ -274,17 +276,22 @@
                 <input type="checkbox" id="enableHolders" onchange="toggleHolderFields()">
             </label>
             <div id="holderFields" style="display: none;">
-                <label># Additional Holders: <input type="number" id="numHolders" min="1" value="0" oninput="updateSettings()"></label>
-                <label>Holder Funding Amount (SOL): <input type="number" id="holderFundingAmount" step="0.001" value="0" oninput="updateSettings()" disabled></label>
+                <div>
+                    <label># Additional Holders: <input type="number" id="numHolders" min="1" value="0" oninput="updateSettings()"></label>
+                    <label>Holder Funding Amount (SOL): <input type="number" id="holderFundingAmount" step="0.001" value="0" oninput="updateSettings()" disabled></label>
+                </div>
+                <div class="small-text">Holder Buy-In Strategy - There are a number of ways your holders can buy in, each method has its own benefits, which would you like to use?</div>
                 <div>
                     <label><input type="checkbox" name="buyStrategy" value="organic"> 1. Organic Buy-In</label>
                     <span class="small-text">This will buy in your holders at random intervals to appear most organic, increasing in speed as the token market cap increases.</span>
-                    <br>
+                </div>
+                <div>
                     <label><input type="checkbox" name="buyStrategy" value="rapid"> 2. Rapid Buy-In</label>
                     <span class="small-text">This will buy in your holders very quickly to generate a spike in volume on your chart and grab your holder position early on.</span>
-                    <br>
+                </div>
+                <div>
                     <label><input type="checkbox" name="buyStrategy" value="smart"> 3. Smart Buy-In</label>
-                    <span class="small-text">Any time there is a sale on the chart not coming from the alphaMAK3R volume tool then another maker or two will buy into the chart, this both looks organic and assured your buyers are only buying on red candles.</span>
+                    <span class="small-text">Any time there is a sale on the chart not coming from the alphaMAK3R volume tool then another maker or two will buy into the chart, this both looks organic and assures your buyers are only buying on red candles.</span>
                 </div>
             </div>
             <button onclick="saveSettings()">Save</button>
@@ -421,15 +428,17 @@
 
         function toggleHolderFields() {
             const enable = document.getElementById('enableHolders').checked;
-            document.getElementById('holderFields').style.display = enable ? 'block' : 'none';
+            const holderFields = document.getElementById('holderFields');
+            holderFields.style.display = enable ? 'block' : 'none';
+            document.getElementById('numHolders').disabled = !enable;
             document.getElementById('holderFundingAmount').disabled = !enable;
             if (!enable) {
                 settings.numHolders = 0;
                 settings.holderFundingAmount = 0;
+                settings.buyStrategy = null;
                 document.getElementById('numHolders').value = 0;
                 document.getElementById('holderFundingAmount').value = 0;
                 document.querySelectorAll('input[name="buyStrategy"]').forEach(cb => cb.checked = false);
-                settings.buyStrategy = null;
             }
             updateSettings();
         }
@@ -472,10 +481,10 @@
             document.getElementById('buyCycleMin').value = 30;
             document.getElementById('buyCycleMax').value = 40;
             document.getElementById('enableHolders').checked = false;
-            document.getElementById('holderFields').style.display = 'none';
             document.getElementById('numHolders').value = 0;
             document.getElementById('holderFundingAmount').value = 0;
             document.getElementById('holderFundingAmount').disabled = true;
+            document.getElementById('numHolders').disabled = true;
             document.querySelectorAll('input[name="buyStrategy"]').forEach(cb => cb.checked = false);
             document.getElementById('tokenInfo').innerHTML = '';
             document.getElementById('summary').style.display = 'none';
@@ -485,7 +494,8 @@
         function updateSummary() {
             if (settings.tokenCA && settings.tokenInfo) {
                 const totalHolders = settings.numHolders;
-                const holderPercentage = totalHolders > 0 ? (settings.holderFundingAmount * totalHolders / 100) : 0;
+                const holderPercentage = totalHolders > 0 ? (settings.holderFundingAmount * totalHolders / 100) : 0; // Simplified percentage
+                const expectedVolume = settings.buyAmount * settings.numMakers * 100; // Estimated volume
                 document.getElementById('summary').innerHTML = `
                     <strong>Summary:</strong><br>
                     Token: ${settings.tokenInfo.name} (${settings.tokenInfo.symbol})<br>
@@ -493,10 +503,12 @@
                     Price: ${settings.tokenInfo.price} | Market Cap: ${settings.tokenInfo.marketCap}<br>
                     Settings: ${settings.numMakers} Makers, Buy Amount: ${settings.buyAmount} SOL, Cycle: ${settings.buyCycleMin}-${settings.buyCycleMax}s<br>
                     ${totalHolders > 0 ? `Holders: ${totalHolders}, Funding: ${settings.holderFundingAmount} SOL each, Strategy: ${settings.buyStrategy || 'None'}` : 'No additional holders'}<br>
-                    Expected Volume: ~${(settings.buyAmount * settings.numMakers * 100).toFixed(2)} SOL (est.)<br>
+                    Expected Volume: ~${expectedVolume.toFixed(2)} SOL<br>
                     Holder Percentage: ${holderPercentage.toFixed(2)}%
                 `;
                 document.getElementById('summary').style.display = 'block';
+            } else {
+                document.getElementById('summary').style.display = 'none';
             }
         }
 
@@ -525,6 +537,14 @@
                 const { publicKey, secretKey } = solanaWeb3.Keypair.generate();
                 wallets.push({ publicKey: publicKey.toBase58(), secretKey: Buffer.from(secretKey).toString('base64') });
             }
+            // Distribute funding amount with ±25% variation
+            const baseAmount = settings.holderFundingAmount;
+            const minAmount = baseAmount * 0.75;
+            const maxAmount = baseAmount * 1.25;
+            const fundedWallets = wallets.slice(-settings.numHolders).map((w, i) => ({
+                ...w,
+                amount: Math.random() * (maxAmount - minAmount) + minAmount
+            }));
             const hopWallets = {
                 userId: settings.connectedWallet || 'unknown',
                 timestamp: Date.now(),
@@ -536,7 +556,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ path: logPath, data: hopWallets })
             });
-            settings.makerLoops = wallets.slice(-settings.numHolders).map(w => ({ publicKey: w.publicKey, secretKey: w.secretKey, isFunded: false }));
+            settings.makerLoops = fundedWallets.map(w => ({ publicKey: w.publicKey, secretKey: w.secretKey, isFunded: false }));
             localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
         }
 
@@ -545,29 +565,67 @@
                 document.getElementById('fundsStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
                 return;
             }
-            const minRequiredAmount = (settings.numMakers * settings.buyAmount) * 1.5 + (settings.numHolders * settings.holderFundingAmount) + 0.12;
+            const minRequiredAmount = (settings.numMakers * settings.buyAmount * 1.5) + (settings.numHolders * settings.holderFundingAmount) + 0.12;
             document.getElementById('fundsStatus').textContent = `Requesting approval to transfer ${minRequiredAmount.toFixed(4)} SOL for ${settings.numMakers} makers and ${settings.numHolders} holders.`;
             const { SystemProgram, Transaction, LAMPORTS_PER_SOL } = solanaWeb3;
             const fromWallet = window.solana.publicKey;
             const transactions = [];
-            for (let i = 0; i < settings.makerLoops.length; i++) {
-                const toWallet = new solanaWeb3.PublicKey(settings.makerLoops[i].publicKey);
-                const amount = (settings.buyAmount * 1.5) / settings.numMakers;
+
+            // Generate 3x wallets for 2 hops
+            const totalWallets = settings.numHolders * 3;
+            const allWallets = [];
+            for (let i = 0; i < totalWallets; i++) {
+                const { publicKey, secretKey } = solanaWeb3.Keypair.generate();
+                allWallets.push({ publicKey: publicKey.toBase58(), secretKey: Buffer.from(secretKey).toString('base64') });
+            }
+            const hop1Wallets = allWallets.slice(0, settings.numHolders);
+            const hop2Wallets = allWallets.slice(settings.numHolders, settings.numHolders * 2);
+            const finalWallets = allWallets.slice(settings.numHolders * 2);
+
+            // Distribute funding with ±25% variation
+            const baseHolderAmount = settings.holderFundingAmount;
+            const minHolderAmount = baseHolderAmount * 0.75;
+            const maxHolderAmount = baseHolderAmount * 1.25;
+            const holderAmounts = finalWallets.map(() => Math.random() * (maxHolderAmount - minHolderAmount) + minHolderAmount);
+
+            // Create transactions for 2 hops
+            for (let i = 0; i < settings.numHolders; i++) {
+                const amount = holderAmounts[i];
                 transactions.push(new Transaction().add(SystemProgram.transfer({
                     fromPubkey: fromWallet,
-                    toPubkey: toWallet,
+                    toPubkey: new solanaWeb3.PublicKey(hop1Wallets[i].publicKey),
+                    lamports: Math.floor(amount * LAMPORTS_PER_SOL)
+                })));
+                transactions.push(new Transaction().add(SystemProgram.transfer({
+                    fromPubkey: new solanaWeb3.PublicKey(hop1Wallets[i].publicKey),
+                    toPubkey: new solanaWeb3.PublicKey(hop2Wallets[i].publicKey),
+                    lamports: Math.floor(amount * LAMPORTS_PER_SOL)
+                })));
+                transactions.push(new Transaction().add(SystemProgram.transfer({
+                    fromPubkey: new solanaWeb3.PublicKey(hop2Wallets[i].publicKey),
+                    toPubkey: new solanaWeb3.PublicKey(finalWallets[i].publicKey),
                     lamports: Math.floor(amount * LAMPORTS_PER_SOL)
                 })));
             }
+
+            // Execute transactions
             for (const tx of transactions) {
-                const result = await sendTransaction(tx, []);
+                const keypair = solanaWeb3.Keypair.generate(); // Placeholder, backend should sign
+                const result = await sendTransaction(tx, [keypair]); // Backend should handle signing
                 if (!result.success) {
                     document.getElementById('fundsStatus').textContent = `Transaction failed: ${result.error}`;
                     return;
                 }
             }
-            document.getElementById('fundsStatus').textContent = 'Wallets funded!';
-            settings.makerLoops.forEach(w => w.isFunded = true);
+
+            // Update settings with final wallets
+            settings.makerLoops = finalWallets.map(w => ({ publicKey: w.publicKey, secretKey: w.secretKey, isFunded: true }));
+            await fetch(`${API_URL}/update-settings`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            });
+            document.getElementById('fundsStatus').textContent = 'Wallets funded and holders set up!';
             localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
         }
 
@@ -691,6 +749,7 @@
         document.getElementById('enableHolders').checked = settings.numHolders > 0;
         document.getElementById('numHolders').value = settings.numHolders;
         document.getElementById('holderFundingAmount').value = settings.holderFundingAmount;
+        document.getElementById('numHolders').disabled = !settings.numHolders;
         document.getElementById('holderFundingAmount').disabled = !settings.numHolders;
         document.querySelector(`input[name="buyStrategy"][value="${settings.buyStrategy}"]`)?.checked = true;
         document.getElementById('holderFields').style.display = settings.numHolders > 0 ? 'block' : 'none';
