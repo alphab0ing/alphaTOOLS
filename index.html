@@ -19,7 +19,7 @@
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
-            padding-top: 280px; /* Increased to avoid overlap with top buttons */
+            padding-top: 0; /* Removed excessive padding, using margin-top on .main-content */
         }
 
         .sidebar {
@@ -88,18 +88,19 @@
             flex-grow: 1;
             width: 100%;
             box-sizing: border-box;
+            margin-top: 20px; /* 1/4 inch below wallet-connect (top: 20px) */
         }
 
         .banner {
             width: 100%;
             height: auto;
             max-width: 100vw;
-            margin-bottom: 25px; /* Increased from 20px to add gap */
+            margin-bottom: 25px;
         }
 
         .hero {
             text-align: center;
-            padding: 50px 0 60px; /* Increased padding-bottom from 50px to 60px */
+            padding: 50px 0 60px;
         }
 
         .hero h1 {
@@ -156,7 +157,7 @@
         }
 
         .wallet-connect button {
-            background-color: #c66b2c; /* Lighter burnt orange to match settings */
+            background-color: #c66b2c;
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -165,7 +166,7 @@
         }
 
         .wallet-connect button:hover {
-            background-color: #d07b3c; /* Lighter hover shade */
+            background-color: #d07b3c;
         }
 
         .wallet-status {
@@ -181,7 +182,7 @@
             position: fixed;
             top: 20px;
             left: 20px;
-            background-color: #c66b2c; /* Lighter burnt orange */
+            background-color: #c66b2c;
             color: #ffffff;
             border: none;
             padding: 10px;
@@ -190,7 +191,7 @@
         }
 
         .menu-toggle:hover {
-            background-color: #d07b3c; /* Lighter hover shade */
+            background-color: #d07b3c;
         }
 
         @media (max-width: 768px) {
@@ -244,17 +245,17 @@
         <img src="/images/alphaAI.png" alt="Mirrored AlphaAI Logo" class="logo-image" onload="console.log('Loaded: alphaAI.png')" onerror="console.log('Failed to load alphaAI.png')">
         <div class="logo">alphaT00LS</div>
         <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="/askalphaai.html">Ask AlphaAI</a></li>
-            <li><a href="#">alphaMAK3R</a></li>
-            <li><a href="#">Pump.FUN Tool-Kit</a></li>
-            <li><a href="#">ChainMail</a></li>
-            <li><a href="#">alphaRAIDER</a></li>
-            <li><a href="#">alphaTUNES</a></li>
-            <li><a href="#">Whale Enforcer</a></li>
-            <li><a href="#">News</a></li>
-            <li><a href="#">Roadmap</a></li>
-            <li><a href="#">About Us</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="askalphaai.html">Ask AlphaAI</a></li>
+            <li><a href="alphamak3r.html">alphaMAK3R</a></li>
+            <li><a href="pumpfun-toolkit.html">Pump.FUN Tool-Kit</a></li>
+            <li><a href="chainmail.html">ChainMail</a></li>
+            <li><a href="alpharaider.html">alphaRAIDER</a></li>
+            <li><a href="alphatunes.html">alphaTUNES</a></li>
+            <li><a href="whale-enforcer.html">Whale Enforcer</a></li>
+            <li><a href="news.html">News</a></li>
+            <li><a href="roadmap.html">Roadmap</a></li>
+            <li><a href="aboutus.html">About Us</a></li>
         </ul>
     </div>
     <div class="main-content">
