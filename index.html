@@ -18,7 +18,7 @@
             color: #ffffff;
             display: flex;
             min-height: 100vh;
-            overflow-x: hidden; /* Prevent horizontal scrolling */
+            overflow-x: hidden;
         }
 
         .sidebar {
@@ -36,7 +36,7 @@
         }
 
         .sidebar .logo-image {
-            width: 100%; /* Increased from 80% to make it a bit bigger */
+            width: 100%;
             transform: scaleX(-1);
             margin-bottom: 20px;
             display: block;
@@ -46,7 +46,8 @@
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 30px;
-            color: #b85b1c; /* Darker burnt orange */
+            color: #b85b1c;
+            text-align: center;
         }
 
         .sidebar ul {
@@ -60,7 +61,7 @@
         }
 
         .sidebar ul li img {
-            display: none; /* Remove all sidebar menu icons */
+            display: none;
         }
 
         .sidebar ul li a {
@@ -71,21 +72,26 @@
         }
 
         .sidebar ul li a:hover {
-            color: #b85b1c; /* Darker burnt orange for hover */
+            color: #b85b1c;
+        }
+
+        .sidebar ul li a[href="/askalphaai.html"] {
+            font-size: 20px;
+            font-weight: bold;
         }
 
         .main-content {
             margin-left: 250px;
             padding: 40px;
             flex-grow: 1;
-            width: 100%; /* Ensure full width */
+            width: 100%;
             box-sizing: border-box;
         }
 
         .banner {
-            width: 100%; /* Fit end-to-end */
-            height: auto; /* Maintain aspect ratio */
-            max-width: 100vw; /* Prevent overflow */
+            width: 100%;
+            height: auto;
+            max-width: 100vw;
             margin-bottom: 20px;
         }
 
@@ -95,7 +101,7 @@
         }
 
         .hero h1 {
-            font-size: 48px; /* Increased from 36px for bigger font */
+            font-size: 48px;
             margin-bottom: 20px;
         }
 
@@ -116,8 +122,8 @@
         }
 
         .contact-links a img {
-            width: 52px; /* 40 * 1.3 */
-            height: 52px; /* 40 * 1.3 */
+            width: 52px;
+            height: 52px;
             transition: transform 0.2s;
         }
 
@@ -126,12 +132,54 @@
             filter: brightness(1.2);
         }
 
+        .wallet-connect {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+        }
+
+        .wallet-connect img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            transition: transform 0.2s;
+        }
+
+        .wallet-connect img:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .wallet-connect button {
+            background-color: #b85b1c;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .wallet-connect button:hover {
+            background-color: #a34f19;
+        }
+
+        .wallet-status {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #1e1e1e;
+            border-radius: 5px;
+        }
+
         .menu-toggle {
             display: none;
             position: fixed;
             top: 20px;
             left: 20px;
-            background-color: #b85b1c; /* Darker burnt orange for toggle */
+            background-color: #b85b1c;
             color: #ffffff;
             border: none;
             padding: 10px;
@@ -163,14 +211,29 @@
             }
 
             .contact-links a img {
-                width: 42px; /* 32 * 1.3, rounded */
-                height: 42px; /* 32 * 1.3, rounded */
+                width: 42px;
+                height: 42px;
+            }
+
+            .wallet-connect {
+                top: 10px;
+                right: 10px;
+            }
+
+            .wallet-connect img {
+                width: 30px;
+                height: 30px;
             }
         }
     </style>
 </head>
 <body>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="wallet-connect">
+        <img src="/images/settings.png" alt="Settings" onload="console.log('Loaded: settings.png')" onerror="console.log('Failed to load settings.png')">
+        <button onclick="connectWallet()">Connect Wallet</button>
+        <div id="wallet-status" class="wallet-status"></div>
+    </div>
     <div class="sidebar" id="sidebar">
         <img src="/images/alphaAI.png" alt="Mirrored AlphaAI Logo" class="logo-image" onload="console.log('Loaded: alphaAI.png')" onerror="console.log('Failed to load alphaAI.png')">
         <div class="logo">alphaT00LS</div>
@@ -202,10 +265,54 @@
         <a href="https://www.facebook.com/profile.php?id=61574135317387" target="_blank"><img src="/images/facebook.png" alt="Facebook" onload="console.log('Loaded: facebook.png')" onerror="console.log('Failed to load facebook.png')"></a>
     </div>
 
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+    <script src="https://unpkg.com/@phantom/phantom-web3@latest/dist/phantom-web3.min.js"></script>
     <script>
         function toggleMenu() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentPage = window.location.pathname;
+            const askAlphaLink = document.querySelector('a[href="/askalphaai.html"]');
+            if (currentPage.includes('askalphaai.html')) {
+                askAlphaLink.style.fontSize = '20px';
+                askAlphaLink.style.fontWeight = 'bold';
+            }
+        });
+
+        let phantom = null;
+        let publicKey = null;
+
+        async function connectWallet() {
+            if ("phantom" in window) {
+                phantom = window.phantom?.solana;
+                if (phantom) {
+                    try {
+                        const resp = await phantom.connect();
+                        publicKey = resp.publicKey.toString();
+                        document.getElementById('wallet-status').style.display = 'block';
+                        document.getElementById('wallet-status').textContent = `Connected: ${publicKey.substring(0, 4)}...${publicKey.substring(publicKey.length - 4)}`;
+                        checkTokenBalance();
+                    } catch (error) {
+                        document.getElementById('wallet-status').style.display = 'block';
+                        document.getElementById('wallet-status').textContent = `Error: ${error.message}`;
+                    }
+                }
+            } else {
+                document.getElementById('wallet-status').style.display = 'block';
+                document.getElementById('wallet-status').textContent = 'Phantom wallet not detected. Please install it.';
+            }
+        }
+
+        async function checkTokenBalance() {
+            if (!publicKey) return;
+            const tokenAddress = 'YOUR_TOKEN_CONTRACT_ADDRESS'; // Replace with your token address
+            const rpcEndpoint = 'https://api.mainnet-beta.solana.com';
+            const connection = new solanaWeb3.Connection(rpcEndpoint, 'confirmed');
+            console.log('Checking balance for:', publicKey);
+            alert('Token balance check not implemented yet. Please provide token contract address.');
         }
     </script>
 </body>
