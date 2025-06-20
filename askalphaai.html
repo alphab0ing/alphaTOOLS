@@ -18,7 +18,7 @@
             color: #ffffff;
             display: flex;
             min-height: 100vh;
-            overflow-x: hidden; /* Prevent horizontal scrolling */
+            overflow-x: hidden;
         }
 
         .sidebar {
@@ -46,7 +46,7 @@
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 30px;
-            color: #b85b1c; /* Darker burnt orange */
+            color: #b85b1c;
             text-align: center;
         }
 
@@ -61,7 +61,7 @@
         }
 
         .sidebar ul li img {
-            display: none; /* Remove all sidebar menu icons */
+            display: none;
         }
 
         .sidebar ul li a {
@@ -72,10 +72,9 @@
         }
 
         .sidebar ul li a:hover {
-            color: #b85b1c; /* Darker burnt orange for hover */
+            color: #b85b1c;
         }
 
-        /* Highlight Ask AlphaAI link on its page */
         .sidebar ul li a[href="/askalphaai.html"] {
             font-size: 20px;
             font-weight: bold;
@@ -85,7 +84,7 @@
             margin-left: 250px;
             padding: 40px;
             flex-grow: 1;
-            width: 100%; /* Ensure full width */
+            width: 100%;
             box-sizing: border-box;
         }
 
@@ -95,7 +94,7 @@
             margin-bottom: 20px;
         }
         .header .title {
-            font-size: 28px; /* Increased from 24px for bigger font */
+            font-size: 28px;
             text-align: center;
             margin-bottom: 10px;
         }
@@ -104,7 +103,7 @@
             justify-content: space-between;
         }
         .header img {
-            max-width: 240px; /* 20% larger than 200px (200 * 1.2) */
+            max-width: 240px;
             height: auto;
         }
 
@@ -172,10 +171,96 @@
             padding: 5px;
             margin-right: 10px;
         }
+
+        .wallet-connect {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+        }
+
+        .wallet-connect img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            transition: transform 0.2s;
+        }
+
+        .wallet-connect img:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .wallet-connect button {
+            background-color: #b85b1c;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .wallet-connect button:hover {
+            background-color: #a34f19;
+        }
+
+        .wallet-status {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #1e1e1e;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-250px);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .contact-links {
+                bottom: 10px;
+                right: 10px;
+                gap: 10px;
+            }
+
+            .contact-links a img {
+                width: 42px;
+                height: 42px;
+            }
+
+            .wallet-connect {
+                top: 10px;
+                right: 10px;
+            }
+
+            .wallet-connect img {
+                width: 30px;
+                height: 30px;
+            }
+        }
     </style>
 </head>
 <body>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="wallet-connect">
+        <img src="/images/settings.png" alt="Settings" onload="console.log('Loaded: settings.png')" onerror="console.log('Failed to load settings.png')">
+        <button onclick="connectWallet()">Connect Wallet</button>
+        <div id="wallet-status" class="wallet-status"></div>
+    </div>
     <div class="sidebar" id="sidebar">
         <img src="/images/alphaAI.png" alt="Mirrored AlphaAI Logo" class="logo-image" onload="console.log('Loaded: alphaAI.png')" onerror="console.log('Failed to load alphaAI.png')">
         <div class="logo">alphaT00LS</div>
@@ -237,14 +322,62 @@
         <a href="https://www.facebook.com/profile.php?id=61574135317387" target="_blank"><img src="/images/facebook.png" alt="Facebook" onload="console.log('Loaded: facebook.png')" onerror="console.log('Failed to load facebook.png')"></a>
     </div>
 
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+    <script src="https://unpkg.com/@phantom/phantom-web3@latest/dist/phantom-web3.min.js"></script>
     <script>
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentPage = window.location.pathname;
+            const askAlphaLink = document.querySelector('a[href="/askalphaai.html"]');
+            if (currentPage.includes('askalphaai.html')) {
+                askAlphaLink.style.fontSize = '20px';
+                askAlphaLink.style.fontWeight = 'bold';
+            }
+        });
+
+        let phantom = null;
+        let publicKey = null;
+
+        async function connectWallet() {
+            if ("phantom" in window) {
+                phantom = window.phantom?.solana;
+                if (phantom) {
+                    try {
+                        const resp = await phantom.connect();
+                        publicKey = resp.publicKey.toString();
+                        document.getElementById('wallet-status').style.display = 'block';
+                        document.getElementById('wallet-status').textContent = `Connected: ${publicKey.substring(0, 4)}...${publicKey.substring(publicKey.length - 4)}`;
+                        checkTokenBalance();
+                    } catch (error) {
+                        document.getElementById('wallet-status').style.display = 'block';
+                        document.getElementById('wallet-status').textContent = `Error: ${error.message}`;
+                    }
+                }
+            } else {
+                document.getElementById('wallet-status').style.display = 'block';
+                document.getElementById('wallet-status').textContent = 'Phantom wallet not detected. Please install it.';
+            }
+        }
+
+        async function checkTokenBalance() {
+            if (!publicKey) return;
+            const tokenAddress = 'YOUR_TOKEN_CONTRACT_ADDRESS'; // Replace with your token address
+            const rpcEndpoint = 'https://api.mainnet-beta.solana.com';
+            const connection = new solanaWeb3.Connection(rpcEndpoint, 'confirmed');
+            console.log('Checking balance for:', publicKey);
+            alert('Token balance check not implemented yet. Please provide token contract address.');
+        }
+
         const VENICE_API_KEY = 'eH8_SieGmQiRNiTdUsjx-Vwe2uQC_YWAEhYMnNL4Re';
         const VENICE_IMAGE_API_KEY = 'zFHG0PrIcDMI2s4Go567Cbc-4_SNaXfaa3YplplX95';
         const VENICE_API_URL = 'https://api.venice.ai/api/v1';
         let selectedModel = '';
         let uploadedImage = null;
 
-        // Fetch and populate model list
         async function loadModels() {
             try {
                 const response = await fetch(`${VENICE_API_URL}/models`, {
@@ -266,7 +399,6 @@
             }
         }
 
-        // Update model details
         function updateModelDetails() {
             const select = document.getElementById('modelSelect');
             const details = document.getElementById('modelDetails');
@@ -278,44 +410,29 @@
             }
         }
 
-        // Get model capabilities (based on traits or documentation)
         function getModelCapabilities(modelId) {
             const capabilities = {
                 'llama-3.3-70b': 'Text, Chat, NSFW',
                 'fluently-xl': 'Image Generation, NSFW',
                 'qwen-2.5-vl': 'Text, Image, Vision',
                 'deepseek-r1-671b': 'Text, Code, Crypto',
-                // Add more models from Venice docs as needed
             };
             return capabilities[modelId] || 'Text, Chat';
         }
 
-        // Send chat message
         async function sendMessage() {
             const input = document.getElementById('user-input');
             const message = input.value.trim();
-            if (!message || !selectedModel) return;
-
+            if (!message || !selectedModel || !publicKey) return alert('Please connect your wallet and select a model!');
             const chatMessages = document.getElementById('chat-messages');
             chatMessages.innerHTML += `<div class="message user-message">${message}</div>`;
-
             input.value = '';
             input.focus();
-
             try {
                 const response = await fetch(`${VENICE_API_URL}/chat/completions`, {
                     method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${VENICE_API_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        model: selectedModel,
-                        messages: [{ role: 'user', content: message }],
-                        venice_parameters: { include_venice_system_prompt: true },
-                        max_tokens: 1000,
-                        stream: false
-                    })
+                    headers: { 'Authorization': `Bearer ${VENICE_API_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model: selectedModel, messages: [{ role: 'user', content: message }], max_tokens: 1000, stream: false })
                 });
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
@@ -323,11 +440,9 @@
             } catch (error) {
                 chatMessages.innerHTML += `<div class="message ai-message">Error: ${error.message}</div>`;
             }
-
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // Handle file upload
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -340,13 +455,11 @@
             reader.readAsDataURL(file);
         }
 
-        // Process image (generate, upscale, or style)
         async function processImage() {
             const action = document.getElementById('imageAction').value;
             const prompt = document.getElementById('imagePrompt').value;
             if (!uploadedImage && action !== 'generate') return alert('Please upload an image first!');
-            if (!selectedModel) return alert('Please select a model!');
-
+            if (!selectedModel || !publicKey) return alert('Please connect your wallet and select a model!');
             const formData = new FormData();
             formData.append('model', selectedModel);
             if (uploadedImage && action !== 'generate') {
@@ -354,14 +467,12 @@
                 formData.append('image', blob, 'uploaded.jpg');
             }
             if (prompt) formData.append('prompt', prompt);
-
             try {
                 let endpoint = '';
                 let key = VENICE_IMAGE_API_KEY;
                 if (action === 'generate') endpoint = `${VENICE_API_URL}/image/generate`;
                 else if (action === 'upscale') endpoint = `${VENICE_API_URL}/image/upscale`;
                 else if (action === 'style') endpoint = `${VENICE_API_URL}/image/styles`;
-
                 const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${key}` },
@@ -377,13 +488,11 @@
             }
         }
 
-        // Update image action UI
         function updateImageAction() {
             const action = document.getElementById('imageAction').value;
             document.getElementById('imagePrompt').placeholder = action === 'generate' ? 'Describe the image to generate...' : 'Enter style or prompt...';
         }
 
-        // Initialize
         loadModels();
         document.getElementById('user-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
