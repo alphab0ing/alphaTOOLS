@@ -92,21 +92,31 @@
 
         .header {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
-        }
-        .header .title {
-            font-size: 28px; /* Increased from 24px for bigger font */
-            text-align: center;
-            margin-bottom: 10px;
         }
         .header .image-row {
             display: flex;
             justify-content: space-between;
+            width: 100%;
         }
         .header img {
             max-width: 240px; /* 20% larger than 200px (200 * 1.2) */
             height: auto;
+        }
+        .header .title-container {
+            text-align: center;
+            flex-grow: 1;
+            padding: 0 20px; /* Add some padding to separate text from images */
+        }
+        .header .title {
+            font-size: 28px; /* Bigger font for Ask Alpha AI */
+            margin: 0;
+        }
+        .header .subtitle {
+            font-size: 18px; /* Smaller font for subtitle */
+            margin: 0;
         }
 
         .model-select {
@@ -300,9 +310,12 @@
     </div>
     <div class="main-content">
         <div class="header">
-            <div class="title">Ask Alpha, the brains behind alphaTOOLS...</div>
             <div class="image-row">
                 <img src="/images/bunnyAlpha.png" alt="Bunny Alpha" onload="console.log('Loaded: bunnyAlpha.png')" onerror="console.log('Failed to load bunnyAlpha.png')">
+                <div class="title-container">
+                    <div class="title">Ask Alpha AI</div>
+                    <div class="subtitle">The brains behind alphaTOOLS</div>
+                </div>
                 <img src="/images/babyalpha.png" alt="Baby Alpha" onload="console.log('Loaded: babyalpha.png')" onerror="console.log('Failed to load babyalpha.png')">
             </div>
         </div>
@@ -359,12 +372,18 @@
                 const data = await response.json();
                 const select = document.getElementById('modelSelect');
                 select.innerHTML = '<option value="">Select a model</option>';
+                // Add existing models from Venice API
                 data.data.forEach(model => {
                     const option = document.createElement('option');
                     option.value = model.id;
-                    option.textContent = `${model.id} (${model.traits ? model.traits.join(', ') : 'No traits'})`;
+                    option.textContent = `${model.id} (${model.traits ? model.traits.join(', ') : getModelDescription(model.id)})`;
                     select.appendChild(option);
                 });
+                // Add Catalina manually
+                const catalinaOption = document.createElement('option');
+                catalinaOption.value = 'catalina';
+                catalinaOption.textContent = `Catalina (${getModelDescription('catalina')})`;
+                select.appendChild(catalinaOption);
             } catch (error) {
                 console.error('Error loading models:', error.message, error);
                 document.getElementById('modelSelect').innerHTML = '<option value="">Error loading models</option>';
@@ -377,22 +396,22 @@
             const details = document.getElementById('modelDetails');
             selectedModel = select.value;
             if (selectedModel) {
-                details.textContent = `Model: ${selectedModel}. Capabilities: ${getModelCapabilities(selectedModel)}`;
+                details.textContent = `Model: ${selectedModel}. Capabilities: ${getModelDescription(selectedModel)}`;
             } else {
                 details.textContent = 'Select a model to see its capabilities.';
             }
         }
 
-        // Get model capabilities (based on traits or documentation)
-        function getModelCapabilities(modelId) {
-            const capabilities = {
+        // Get model description (replacing "no traits" with capabilities)
+        function getModelDescription(modelId) {
+            const descriptions = {
                 'llama-3.3-70b': 'Text, Chat, NSFW',
                 'fluently-xl': 'Image Generation, NSFW',
                 'qwen-2.5-vl': 'Text, Image, Vision',
                 'deepseek-r1-671b': 'Text, Code, Crypto',
-                // Add more models from Venice docs as needed
+                'catalina': 'Text, Chat, NSFW, Image Generation, Voice' // Catalina's capabilities from bot code
             };
-            return capabilities[modelId] || 'Text, Chat';
+            return descriptions[modelId] || 'General-purpose AI with text and chat capabilities';
         }
 
         // Send chat message
@@ -415,9 +434,9 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        model: selectedModel,
+                        model: selectedModel === 'catalina' ? 'llama-3.3-70b-instruct' : selectedModel, // Use llama for Catalina
                         messages: [{ role: 'user', content: message }],
-                        venice_parameters: { include_venice_system_prompt: true },
+                        venice_parameters: { include_venice_system_prompt: selectedModel === 'catalina' },
                         max_tokens: 1000,
                         stream: false
                     })
@@ -453,7 +472,7 @@
             if (!selectedModel) return alert('Please select a model!');
 
             const formData = new FormData();
-            formData.append('model', selectedModel);
+            formData.append('model', selectedModel === 'catalina' ? 'fluently-xl' : selectedModel); // Use fluently-xl for Catalina's image generation
             if (uploadedImage && action !== 'generate') {
                 const blob = await fetch(uploadedImage).then(r => r.blob());
                 formData.append('image', blob, 'uploaded.jpg');
