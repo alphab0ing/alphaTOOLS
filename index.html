@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>alphaT00LS</title>
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #1e1e1e;
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.hidden {
+            transform: translateX(-250px);
+        }
+
+        .sidebar .logo-image {
+            width: 40%;
+            transform: scaleX(-1);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #b85b1c; /* Darker burnt orange */
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar ul li img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .sidebar ul li .mirrored {
+            transform: scaleX(-1);
+        }
+
+        .sidebar ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.2s;
+        }
+
+        .sidebar ul li a:hover {
+            color: #b85b1c; /* Darker burnt orange for hover */
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 40px;
+            flex-grow: 1;
+        }
+
+        .banner {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        .hero img {
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .contact-links {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .contact-links a img {
+            width: 40px;
+            height: 40px;
+            transition: transform 0.2s;
+        }
+
+        .contact-links a img:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #b85b1c; /* Darker burnt orange for toggle */
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-250px);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .contact-links {
+                bottom: 10px;
+                right: 10px;
+                gap: 10px;
+            }
+
+            .contact-links a img {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="sidebar" id="sidebar">
+        <img src="/images/alphaAI.png" alt="Mirrored AlphaAI Logo" class="logo-image" onload="console.log('Loaded: alphaAI.png')" onerror="console.log('Failed to load alphaAI.png')">
+        <div class="logo">alphaT00LS</div>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><img src="/images/alphaheadshot.png" alt="Ask AlphaAI Icon" class="mirrored" onload="console.log('Loaded: alphaheadshot.png')" onerror="console.log('Failed to load alphaheadshot.png')"><a href="#">Ask AlphaAI</a></li>
+            <li><img src="/images/alphaAI-Chart.png" alt="alphaMAK3R Icon" onload="console.log('Loaded: alphaAI-Chart.png')" onerror="console.log('Failed to load alphaAI-Chart.png')"><a href="#">alphaMAK3R</a></li>
+            <li><img src="/images/pumpfun.png" alt="Pump.FUN Icon" onload="console.log('Loaded: pumpfun.png')" onerror="console.log('Failed to load pumpfun.png')"><a href="#">Pump.FUN Tool-Kit</a></li>
+            <li><img src="/images/chainmail.png" alt="ChainMail Icon" onload="console.log('Loaded: chainmail.png')" onerror="console.log('Failed to load chainmail.png')"><a href="#">ChainMail</a></li>
+            <li><img src="/images/fbraider.png" alt="alphaRAIDER Icon" onload="console.log('Loaded: fbraider.png')" onerror="console.log('Failed to load fbraider.png')"><a href="#">alphaRAIDER</a></li>
+            <li><img src="/images/spotify.png" alt="alphaTUNES Icon" onload="console.log('Loaded: spotify.png')" onerror="console.log('Failed to load spotify.png')"><a href="#">alphaTUNES</a></li>
+            <li><img src="/images/whale.jpg" alt="Whale Enforcer Icon" onload="console.log('Loaded: whale.jpg')" onerror="console.log('Failed to load whale.jpg')"><a href="#">Whale Enforcer</a></li>
+            <li><img src="/images/solanarocket.webp" alt="News Icon" onload="console.log('Loaded: solanarocket.webp')" onerror="console.log('Failed to load solanarocket.webp')"><a href="#">News</a></li>
+            <li><img src="/images/roadmap3.webp" alt="Roadmap Icon" onload="console.log('Loaded: roadmap3.webp')" onerror="console.log('Failed to load roadmap3.webp')"><a href="#">Roadmap</a></li>
+            <li><img src="/images/aboutUs.png" alt="About Us Icon" onload="console.log('Loaded: aboutUs.png')" onerror="console.log('Failed to load aboutUs.png')"><a href="#">About Us</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <img src="/images/mainBanner.png" alt="Main Banner" class="banner" onload="console.log('Loaded: mainBanner.png')" onerror="console.log('Failed to load mainBanner.png')">
+        <div class="hero">
+            <img src="/images/alphaAI.png" alt="AlphaAI Robot" onload="console.log('Loaded: alphaAI.png (hero)')" onerror="console.log('Failed to load alphaAI.png (hero)')">
+            <h1>Welcome to alphaT00LS</h1>
+            <p>Explore our suite of cutting-edge tools designed to empower your journey in the digital world. From AI-driven insights to advanced automation, alphaT00LS has you covered.</p>
+        </div>
+    </div>
+    <div class="contact-links">
+        <a href="https://x.com/alphat00ls" target="_blank"><img src="/images/x.webp" alt="X" onload="console.log('Loaded: x.webp')" onerror="console.log('Failed to load x.webp')"></a>
+        <a href="https://t.me/alphat00ls" target="_blank"><img src="/images/telegram.png" alt="Telegram" onload="console.log('Loaded: telegram.png')" onerror="console.log('Failed to load telegram.png')"></a>
+        <a href="https://www.facebook.com/profile.php?id=61574135317387" target="_blank"><img src="/images/facebook.png" alt="Facebook" onload="console.log('Loaded: facebook.png')" onerror="console.log('Failed to load facebook.png')"></a>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
