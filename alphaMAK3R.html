@@ -300,18 +300,20 @@
                 <div id="tokenInfo" class="token-info small-text"></div>
             </div>
             <div class="input-group">
-                <label>Makers/Loops: <input type="number" id="numMakers" min="1" value="1" oninput="updateSettings()">
-                    <span class="small-text">The number of makers you have will be the number of wallets that will be buying and selling within your chosen buy cycle duration.</span>
-                </label>
-                <label>Buy Amount (SOL): <input type="number" id="buyAmount" step="0.001" value="0.05" oninput="updateSettings()">
-                    <span class="small-text">The volume maker will be buying and selling random amounts ± your set buy amount.</span>
-                </label>
-                <label>Buy Cycle Min (s): <input type="number" id="buyCycleMin" min="5" value="30" oninput="updateSettings()">
-                    <span class="small-text">Buy Cycle adjusts how organic your buys look on your chart or how quickly they're happening. This will also affect how long your bot will run overall.</span>
-                </label>
-                <label>Max (s): <input type="number" id="buyCycleMax" min="10" value="40" oninput="updateSettings()">
-                    <span class="small-text">Buy Cycle adjusts how organic your buys look on your chart or how quickly they're happening. This will also affect how long your bot will run overall.</span>
-                </label>
+                <label>Makers/Loops: <input type="number" id="numMakers" min="1" value="1" oninput="updateSettings()"></label>
+                <span class="small-text">The number of makers you have will be the number of wallets that will be buying and selling within your chosen buy cycle duration.</span>
+            </div>
+            <div class="input-group">
+                <label>Buy Amount (SOL): <input type="number" id="buyAmount" step="0.001" value="0.05" oninput="updateSettings()"></label>
+                <span class="small-text">The volume maker will be buying and selling random amounts ± your set buy amount.</span>
+            </div>
+            <div class="input-group">
+                <label>Buy Cycle Min (s): <input type="number" id="buyCycleMin" min="5" value="30" oninput="updateSettings()"></label>
+                <span class="small-text">Buy Cycle adjusts how organic your buys look on your chart or how quickly they're happening. This will also affect how long your bot will run overall.</span>
+            </div>
+            <div class="input-group">
+                <label>Max (s): <input type="number" id="buyCycleMax" min="10" value="40" oninput="updateSettings()"></label>
+                <span class="small-text">Buy Cycle adjusts how organic your buys look on your chart or how quickly they're happening. This will also affect how long your bot will run overall.</span>
             </div>
             <div class="input-group">
                 <button onclick="saveSettings()">Save</button>
@@ -550,8 +552,8 @@
             if (settings.tokenCA && settings.tokenInfo) {
                 const totalHolders = settings.numHolders;
                 const holderPercentage = totalHolders > 0 ? (settings.holderFundingAmount * totalHolders / 100) : 0;
-                const expectedVolume = settings.buyAmount * settings.numMakers * 100;
-                const estimatedRuntime = (settings.buyCycleMin + settings.buyCycleMax) / 2 * settings.numMakers * 60; // Minutes to hours
+                const expectedVolume = settings.buyAmount * settings.numMakers * 100; // Simplified estimate
+                const estimatedRuntime = ((settings.buyCycleMin + settings.buyCycleMax) / 2) * settings.numMakers * 60 / 3600; // Average cycle time * makers, converted to hours
                 document.getElementById('summaryContent').innerHTML = `
                     <strong>Settings Summary:</strong><br>
                     Token: ${settings.tokenInfo.name} (${settings.tokenInfo.symbol})<br>
@@ -559,7 +561,7 @@
                     Price: ${settings.tokenInfo.price} | Market Cap: ${settings.tokenInfo.marketCap}<br>
                     Settings: ${settings.numMakers} Makers, Buy Amount: ${settings.buyAmount} SOL, Cycle: ${settings.buyCycleMin}-${settings.buyCycleMax}s<br>
                     Estimated Volume: ~${expectedVolume.toFixed(2)} SOL<br>
-                    Estimated Runtime: ~${(estimatedRuntime / 3600).toFixed(1)} hours
+                    Estimated Runtime: ~${estimatedRuntime.toFixed(1)} hours
                 `;
                 document.getElementById('settingsSummary').style.display = 'block';
                 if (totalHolders > 0) {
@@ -591,6 +593,7 @@
             const data = await response.json();
             document.getElementById('marketStatus').textContent = data.message || 'Settings saved!';
             setTimeout(() => document.getElementById('marketStatus').textContent = '', 2000);
+            updateSummary(); // Display summary after saving
             if (settings.numHolders > 0) {
                 await generateHolderWallets();
             }
