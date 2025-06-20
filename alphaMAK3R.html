@@ -13,7 +13,6 @@
             box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
-
         body {
             background-color: #2a2a2a;
             color: #ffffff;
@@ -21,7 +20,6 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
-
         .sidebar {
             width: 250px;
             background-color: #1e1e1e;
@@ -31,18 +29,15 @@
             overflow-y: auto;
             transition: transform 0.3s ease;
         }
-
         .sidebar.hidden {
             transform: translateX(-250px);
         }
-
         .sidebar .logo-image {
             width: 100%;
             transform: scaleX(-1);
             margin-bottom: 20px;
             display: block;
         }
-
         .logo {
             font-size: 24px;
             font-weight: bold;
@@ -50,37 +45,30 @@
             color: #b85b1c;
             text-align: center;
         }
-
         .sidebar ul {
             list-style: none;
         }
-
         .sidebar ul li {
             margin: 20px 0;
             display: flex;
             align-items: center;
         }
-
         .sidebar ul li img {
             display: none;
         }
-
         .sidebar ul li a {
             color: #ffffff;
             text-decoration: none;
             font-size: 18px;
             transition: color 0.2s;
         }
-
         .sidebar ul li a:hover {
             color: #b85b1c;
         }
-
         .sidebar ul li a[href="/alphaMAK3R.html"] {
             font-size: 20px;
             font-weight: bold;
         }
-
         .main-content {
             margin-left: 250px;
             padding: 30px;
@@ -89,7 +77,6 @@
             box-sizing: border-box;
             margin-top: 96px;
         }
-
         .header {
             display: flex;
             justify-content: space-between;
@@ -117,10 +104,9 @@
             margin: 0;
         }
         .header .subtitle {
-            font-size: 18px;
+            font-size: 12px; /* Smaller font as requested */
             margin: 0;
         }
-
         .section {
             margin-bottom: 20px;
         }
@@ -136,7 +122,6 @@
             margin-top: 10px;
             color: #ffcc00;
         }
-
         .wallet-connect {
             position: fixed;
             top: 20px;
@@ -145,19 +130,16 @@
             display: flex;
             align-items: center;
         }
-
         .wallet-connect img {
             width: 40px;
             height: 40px;
             margin-right: 10px;
             transition: transform 0.2s;
         }
-
         .wallet-connect img:hover {
             transform: scale(1.1);
             filter: brightness(1.2);
         }
-
         .wallet-connect button {
             background-color: #b85b1c;
             color: #fff;
@@ -166,11 +148,9 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
         .wallet-connect button:hover {
             background-color: #a34f19;
         }
-
         .wallet-status {
             display: none;
             margin-top: 10px;
@@ -178,7 +158,6 @@
             background-color: #1e1e1e;
             border-radius: 5px;
         }
-
         .contact-links {
             position: fixed;
             bottom: 20px;
@@ -187,18 +166,15 @@
             gap: 15px;
             z-index: 1000;
         }
-
         .contact-links a img {
             width: 52px;
             height: 52px;
             transition: transform 0.2s;
         }
-
         .contact-links a img:hover {
             transform: scale(1.1);
             filter: brightness(1.2);
         }
-
         .menu-toggle {
             display: none;
             position: fixed;
@@ -211,24 +187,25 @@
             cursor: pointer;
             z-index: 1000;
         }
-
         .menu-toggle:hover {
             background-color: #a34f19;
         }
-
+        .small-text {
+            font-size: 12px;
+        }
+        .medium-text {
+            font-size: 16px;
+        }
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-250px);
             }
-
             .sidebar.active {
                 transform: translateX(0);
             }
-
             .main-content {
                 margin-left: 0;
             }
-
             .menu-toggle {
                 display: block;
             }
@@ -265,46 +242,72 @@
                 <img src="/images/bunnyAlpha.png" alt="Bunny Alpha" onload="console.log('Loaded: bunnyAlpha.png')" onerror="console.log('Failed to load bunnyAlpha.png')">
                 <div class="title-container">
                     <div class="title">alphaMAK3R</div>
-                    <div class="subtitle">The market making<br>tool for alphaTOOLS</div>
+                    <div class="subtitle">The best Volume Bot & Market Maker for Pump.fun / Solana there is!!</div>
+                    <div class="small-text">
+                        alphaMAK3R will use only warm wallets with trading history to buy into your token to generate large amounts of volume. Please adjust your settings below and we can get ready to start this up. Remember you can pause, cancel, adjust or recover your funds at anytime.
+                    </div>
                 </div>
                 <img src="/images/babyalpha.png" alt="Baby Alpha" onload="console.log('Loaded: babyalpha.png')" onerror="console.log('Failed to load babyalpha.png')">
             </div>
         </div>
         <div class="section">
             <h2>Settings</h2>
-            <label>Token CA: <input type="text" id="tokenCA" placeholder="Enter Token CA"></label>
-            <label>Makers: <input type="number" id="numMakers" min="1" value="1"></label>
-            <label>Buy Amount (SOL): <input type="number" id="buyAmount" step="0.001" value="0.05"></label>
-            <label>Buy Cycle Min (s): <input type="number" id="buyCycleMin" min="5" value="30"></label>
-            <label>Buy Cycle Max (s): <input type="number" id="buyCycleMax" min="10" value="40"></label>
-            <label>Keep Makers: <input type="checkbox" id="keepMakersEnabled"></label>
-            <label>Keep Makers %: <input type="number" id="keepMakersPercent" min="0" max="100" value="0" disabled></label>
-            <button onclick="saveSettings()">Save Settings</button>
-            <div id="settingsStatus" class="status"></div>
+            <div>
+                <label>Token CA: 
+                    <input type="text" id="tokenCA" placeholder="Enter Token CA" oninput="updateTokenInfo()">
+                </label>
+                <div id="tokenInfo" class="small-text"></div>
+            </div>
+            <div>
+                <label>Makers/Loops: <input type="number" id="numMakers" min="1" value="1" oninput="updateSettings()"></label>
+                <label>Buy Amount (SOL): <input type="number" id="buyAmount" step="0.001" value="0.05" oninput="updateSettings()"></label>
+                <label>Buy Cycle Min (s): <input type="number" id="buyCycleMin" min="5" value="30" oninput="updateSettings()"></label>
+                <label>Max (s): <input type="number" id="buyCycleMax" min="10" value="40" oninput="updateSettings()"></label>
+            </div>
+        </div>
+        <div class="section">
+            <h2 class="medium-text">Additional Holders</h2>
+            <div class="small-text">
+                If selected the market maker will add several additional holders into your token while running the volume bot. This will greatly improve your tokens hype showing not only large amounts of volume but increasing holders as well.
+            </div>
+            <label>Enable Extra Holders? 
+                <input type="checkbox" id="enableHolders" onchange="toggleHolderFields()">
+            </label>
+            <div id="holderFields" style="display: none;">
+                <label># Additional Holders: <input type="number" id="numHolders" min="1" value="0" oninput="updateSettings()"></label>
+                <label>Holder Funding Amount (SOL): <input type="number" id="holderFundingAmount" step="0.001" value="0" oninput="updateSettings()" disabled></label>
+                <div>
+                    <label><input type="checkbox" name="buyStrategy" value="organic"> 1. Organic Buy-In</label>
+                    <span class="small-text">This will buy in your holders at random intervals to appear most organic, increasing in speed as the token market cap increases.</span>
+                    <br>
+                    <label><input type="checkbox" name="buyStrategy" value="rapid"> 2. Rapid Buy-In</label>
+                    <span class="small-text">This will buy in your holders very quickly to generate a spike in volume on your chart and grab your holder position early on.</span>
+                    <br>
+                    <label><input type="checkbox" name="buyStrategy" value="smart"> 3. Smart Buy-In</label>
+                    <span class="small-text">Any time there is a sale on the chart not coming from the alphaMAK3R volume tool then another maker or two will buy into the chart, this both looks organic and assured your buyers are only buying on red candles.</span>
+                </div>
+            </div>
+            <button onclick="saveSettings()">Save</button>
+            <button onclick="clearSettings()">Clear</button>
+            <div id="summary" class="small-text" style="display: none;"></div>
         </div>
         <div class="section">
             <h2>Funds</h2>
-            <button onclick="fundWallets()">Fund Wallets</button>
-            <button onclick="viewFunds()">View Funds</button>
-            <button onclick="recoverFunds()">Recover Funds</button>
+            <button onclick="window.location.href='/funds.html'">Funds</button>
             <div id="fundsStatus" class="status"></div>
         </div>
         <div class="section">
-            <h2>Market Making</h2>
-            <button onclick="startMarketMaker()">Start Market Maker</button>
-            <button onclick="stopMarketMaker()">Stop Market Maker</button>
+            <button id="startButton" onclick="startMarketMaker()">Start</button>
+            <button id="stopButton" onclick="stopMarketMaker()" disabled>Stop</button>
             <div id="marketStatus" class="status"></div>
         </div>
         <div class="section">
-            <h2>AlphaAI Assistance</h2>
-            <input type="text" id="alphaAIQuestion" placeholder="Ask AlphaAI (e.g., 'How much volume with 1 SOL?')">
-            <button onclick="askAlphaAI()">Ask</button>
+            <button onclick="askAlphaAI()">Ask AlphaAI</button>
             <div id="alphaAIResponse" class="status"></div>
         </div>
         <div class="section">
-            <h2>Reports</h2>
-            <button onclick="viewReports()">View Reports</button>
-            <div id="reportsStatus" class="status"></div>
+            <button onclick="window.location.href='/operator-panel.html'">Operator Panel</button>
+            <div id="operatorStatus" class="status"></div>
         </div>
     </div>
     <div class="contact-links">
@@ -314,7 +317,7 @@
     </div>
 
     <script>
-        const API_URL = 'https://157.230.213.252/api'; // Updated to your Droplet IP
+        const API_URL = 'https://157.230.213.252/api';
 
         let settings = {
             tokenCA: null,
@@ -330,7 +333,10 @@
             makerLoops: [],
             fundedAmount: 0,
             connectedWallet: null,
-            isVerified: false
+            isVerified: false,
+            numHolders: 0,
+            holderFundingAmount: 0,
+            buyStrategy: null
         };
 
         // Phantom Wallet Integration
@@ -342,9 +348,10 @@
                     settings.connectedWallet = phantom.publicKey.toString();
                     document.getElementById('wallet-status').style.display = 'block';
                     const tokenBalance = await checkTokenBalance(settings.connectedWallet);
-                    settings.isVerified = tokenBalance >= 1000000; // Using MIN_TOKEN_REQUIREMENT from config
+                    settings.isVerified = tokenBalance >= 1000000;
                     document.getElementById('wallet-status').textContent = `Connected: ${settings.connectedWallet.slice(0, 6)}...${settings.connectedWallet.slice(-4)}${settings.isVerified ? ' (Verified)' : ' (Not Verified - Need 1,000,000 tokens)'}`;
                     console.log('Connected to Phantom wallet:', settings.connectedWallet, 'Token Balance:', tokenBalance);
+                    updateSettings();
                 } catch (error) {
                     document.getElementById('wallet-status').style.display = 'block';
                     document.getElementById('wallet-status').textContent = `Connection failed: ${error.message}`;
@@ -358,9 +365,9 @@
         }
 
         async function checkTokenBalance(walletAddress) {
-            const connection = new solanaWeb3.Connection('https://api.mainnet-beta.solana.com', 'confirmed'); // Default RPC
+            const connection = new solanaWeb3.Connection('https://api.mainnet-beta.solana.com', 'confirmed');
             try {
-                const tokenAccounts = await connection.getTokenAccountsByOwner(new solanaWeb3.PublicKey(walletAddress), { mint: new solanaWeb3.PublicKey('YourTokenAddressHere') }); // Replace with TOKEN_CA
+                const tokenAccounts = await connection.getTokenAccountsByOwner(new solanaWeb3.PublicKey(walletAddress), { mint: new solanaWeb3.PublicKey(settings.tokenCA || 'YourTokenAddressHere') });
                 if (!tokenAccounts.value.length) return 0;
                 const balance = await connection.getTokenAccountBalance(tokenAccounts.value[0].pubkey);
                 return balance.value.uiAmount || 0;
@@ -370,13 +377,8 @@
             }
         }
 
-        // Utility Functions
-        async function delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
         async function sendTransaction(transaction, signers) {
-            const connection = new solanaWeb3.Connection('https://api.mainnet-beta.solana.com', 'confirmed'); // Default RPC
+            const connection = new solanaWeb3.Connection('https://api.mainnet-beta.solana.com', 'confirmed');
             try {
                 const { blockhash } = await connection.getLatestBlockhash();
                 transaction.recentBlockhash = blockhash;
@@ -391,26 +393,151 @@
             }
         }
 
+        async function updateTokenInfo() {
+            const tokenCA = document.getElementById('tokenCA').value;
+            if (tokenCA) {
+                settings.tokenCA = tokenCA;
+                const response = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${tokenCA}`);
+                const data = await response.json();
+                const pair = data.pairs?.[0] || {};
+                settings.tokenInfo = {
+                    name: pair.baseToken?.name || 'Unknown Token',
+                    symbol: pair.baseToken?.symbol || 'UNKNOWN',
+                    price: pair.priceUsd ? `$${parseFloat(pair.priceUsd).toFixed(6)}` : 'N/A',
+                    marketCap: pair.marketCap ? `$${parseFloat(pair.marketCap).toFixed(2)}` : 'N/A',
+                    image: pair.baseToken?.logoURL || '/images/default-token.png'
+                };
+                document.getElementById('tokenInfo').innerHTML = `
+                    <span>${settings.tokenInfo.name} (${settings.tokenInfo.symbol})</span>
+                    <br><a href="https://app.axiom.io/explore/${tokenCA}" target="_blank">View on Axiom</a>
+                    <br>Price: ${settings.tokenInfo.price} | Market Cap: ${settings.tokenInfo.marketCap}
+                    <img src="${settings.tokenInfo.image}" alt="Token Image" style="max-width: 50px;">
+                `;
+            } else {
+                document.getElementById('tokenInfo').innerHTML = '';
+            }
+            updateSettings();
+        }
+
+        function toggleHolderFields() {
+            const enable = document.getElementById('enableHolders').checked;
+            document.getElementById('holderFields').style.display = enable ? 'block' : 'none';
+            document.getElementById('holderFundingAmount').disabled = !enable;
+            if (!enable) {
+                settings.numHolders = 0;
+                settings.holderFundingAmount = 0;
+                document.getElementById('numHolders').value = 0;
+                document.getElementById('holderFundingAmount').value = 0;
+                document.querySelectorAll('input[name="buyStrategy"]').forEach(cb => cb.checked = false);
+                settings.buyStrategy = null;
+            }
+            updateSettings();
+        }
+
+        function updateSettings() {
+            settings.numMakers = parseInt(document.getElementById('numMakers').value) || 1;
+            settings.buyAmount = parseFloat(document.getElementById('buyAmount').value) || 0.05;
+            settings.buyCycleMin = parseInt(document.getElementById('buyCycleMin').value) || 30;
+            settings.buyCycleMax = parseInt(document.getElementById('buyCycleMax').value) || 40;
+            settings.numHolders = parseInt(document.getElementById('numHolders').value) || 0;
+            settings.holderFundingAmount = parseFloat(document.getElementById('holderFundingAmount').value) || 0;
+            settings.buyStrategy = document.querySelector('input[name="buyStrategy"]:checked')?.value || null;
+            localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
+            updateSummary();
+        }
+
+        function clearSettings() {
+            settings = {
+                tokenCA: null,
+                tokenInfo: null,
+                numMakers: 1,
+                buyAmount: 0.05,
+                buyCycleMin: 30,
+                buyCycleMax: 40,
+                keepMakersEnabled: false,
+                keepMakersPercent: 0,
+                isRunning: false,
+                userFunds: {},
+                makerLoops: [],
+                fundedAmount: 0,
+                connectedWallet: null,
+                isVerified: false,
+                numHolders: 0,
+                holderFundingAmount: 0,
+                buyStrategy: null
+            };
+            document.getElementById('tokenCA').value = '';
+            document.getElementById('numMakers').value = 1;
+            document.getElementById('buyAmount').value = 0.05;
+            document.getElementById('buyCycleMin').value = 30;
+            document.getElementById('buyCycleMax').value = 40;
+            document.getElementById('enableHolders').checked = false;
+            document.getElementById('holderFields').style.display = 'none';
+            document.getElementById('numHolders').value = 0;
+            document.getElementById('holderFundingAmount').value = 0;
+            document.getElementById('holderFundingAmount').disabled = true;
+            document.querySelectorAll('input[name="buyStrategy"]').forEach(cb => cb.checked = false);
+            document.getElementById('tokenInfo').innerHTML = '';
+            document.getElementById('summary').style.display = 'none';
+            localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
+        }
+
+        function updateSummary() {
+            if (settings.tokenCA && settings.tokenInfo) {
+                const totalHolders = settings.numHolders;
+                const holderPercentage = totalHolders > 0 ? (settings.holderFundingAmount * totalHolders / 100) : 0;
+                document.getElementById('summary').innerHTML = `
+                    <strong>Summary:</strong><br>
+                    Token: ${settings.tokenInfo.name} (${settings.tokenInfo.symbol})<br>
+                    <img src="${settings.tokenInfo.image}" alt="Token Image" style="max-width: 50px;"><br>
+                    Price: ${settings.tokenInfo.price} | Market Cap: ${settings.tokenInfo.marketCap}<br>
+                    Settings: ${settings.numMakers} Makers, Buy Amount: ${settings.buyAmount} SOL, Cycle: ${settings.buyCycleMin}-${settings.buyCycleMax}s<br>
+                    ${totalHolders > 0 ? `Holders: ${totalHolders}, Funding: ${settings.holderFundingAmount} SOL each, Strategy: ${settings.buyStrategy || 'None'}` : 'No additional holders'}<br>
+                    Expected Volume: ~${(settings.buyAmount * settings.numMakers * 100).toFixed(2)} SOL (est.)<br>
+                    Holder Percentage: ${holderPercentage.toFixed(2)}%
+                `;
+                document.getElementById('summary').style.display = 'block';
+            }
+        }
+
         async function saveSettings() {
             if (!settings.isVerified) {
-                document.getElementById('settingsStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
+                alert('Wallet not verified! Connect a wallet with sufficient tokens.');
                 return;
             }
-            settings.tokenCA = document.getElementById('tokenCA').value || 'YourTokenAddressHere'; // Fallback
-            settings.numMakers = parseInt(document.getElementById('numMakers').value);
-            settings.buyAmount = parseFloat(document.getElementById('buyAmount').value);
-            settings.buyCycleMin = parseInt(document.getElementById('buyCycleMin').value);
-            settings.buyCycleMax = parseInt(document.getElementById('buyCycleMax').value);
-            settings.keepMakersEnabled = document.getElementById('keepMakersEnabled').checked;
-            settings.keepMakersPercent = parseInt(document.getElementById('keepMakersPercent').value) || 0;
-            document.getElementById('keepMakersPercent').disabled = !settings.keepMakersEnabled;
-            if (settings.tokenCA) {
-                const response = await fetch(`${API_URL}/token-info?tokenCA=${settings.tokenCA}`);
-                settings.tokenInfo = await response.json();
+            const response = await fetch(`${API_URL}/save-settings`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            });
+            const data = await response.json();
+            document.getElementById('marketStatus').textContent = data.message || 'Settings saved!';
+            setTimeout(() => document.getElementById('marketStatus').textContent = '', 2000);
+            if (settings.numHolders > 0) {
+                await generateHolderWallets();
             }
+        }
+
+        async function generateHolderWallets() {
+            const totalWallets = settings.numHolders * 3; // 3 hops: 1 original + 2 intermediate
+            const wallets = [];
+            for (let i = 0; i < totalWallets; i++) {
+                const { publicKey, secretKey } = solanaWeb3.Keypair.generate();
+                wallets.push({ publicKey: publicKey.toBase58(), secretKey: Buffer.from(secretKey).toString('base64') });
+            }
+            const hopWallets = {
+                userId: settings.connectedWallet || 'unknown',
+                timestamp: Date.now(),
+                wallets: wallets
+            };
+            const logPath = `./logs/${settings.connectedWallet}.${Date.now()}.hopwallets.json`;
+            await fetch(`${API_URL}/save-wallets`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ path: logPath, data: hopWallets })
+            });
+            settings.makerLoops = wallets.slice(-settings.numHolders).map(w => ({ publicKey: w.publicKey, secretKey: w.secretKey, isFunded: false }));
             localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
-            document.getElementById('settingsStatus').textContent = 'Settings saved!';
-            setTimeout(() => document.getElementById('settingsStatus').textContent = '', 2000);
         }
 
         async function fundWallets() {
@@ -418,25 +545,30 @@
                 document.getElementById('fundsStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
                 return;
             }
-            const minRequiredAmount = (settings.numMakers * settings.buyAmount) * 1.5 + 0.12 * (1 + 3 / 100);
-            document.getElementById('fundsStatus').textContent = `Requesting approval to transfer ${minRequiredAmount.toFixed(4)} SOL to funding wallet.`;
+            const minRequiredAmount = (settings.numMakers * settings.buyAmount) * 1.5 + (settings.numHolders * settings.holderFundingAmount) + 0.12;
+            document.getElementById('fundsStatus').textContent = `Requesting approval to transfer ${minRequiredAmount.toFixed(4)} SOL for ${settings.numMakers} makers and ${settings.numHolders} holders.`;
             const { SystemProgram, Transaction, LAMPORTS_PER_SOL } = solanaWeb3;
             const fromWallet = window.solana.publicKey;
-            const toWallet = new solanaWeb3.PublicKey('AkkW99MPWcV9AtWQBscanVUQGB9W8uZsqmvJdE4mXcFN'); // Example funding wallet
-            const transaction = new Transaction().add(
-                SystemProgram.transfer({
+            const transactions = [];
+            for (let i = 0; i < settings.makerLoops.length; i++) {
+                const toWallet = new solanaWeb3.PublicKey(settings.makerLoops[i].publicKey);
+                const amount = (settings.buyAmount * 1.5) / settings.numMakers;
+                transactions.push(new Transaction().add(SystemProgram.transfer({
                     fromPubkey: fromWallet,
                     toPubkey: toWallet,
-                    lamports: Math.floor(minRequiredAmount * LAMPORTS_PER_SOL)
-                })
-            );
-            const result = await sendTransaction(transaction, []);
-            if (result.success) {
-                document.getElementById('fundsStatus').textContent = `Transaction approved! Funding in progress (Signature: ${result.signature}).`;
-                setTimeout(() => document.getElementById('fundsStatus').textContent = 'Wallets funded!', 5000);
-            } else {
-                document.getElementById('fundsStatus').textContent = `Transaction failed: ${result.error}`;
+                    lamports: Math.floor(amount * LAMPORTS_PER_SOL)
+                })));
             }
+            for (const tx of transactions) {
+                const result = await sendTransaction(tx, []);
+                if (!result.success) {
+                    document.getElementById('fundsStatus').textContent = `Transaction failed: ${result.error}`;
+                    return;
+                }
+            }
+            document.getElementById('fundsStatus').textContent = 'Wallets funded!';
+            settings.makerLoops.forEach(w => w.isFunded = true);
+            localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
         }
 
         async function viewFunds() {
@@ -474,15 +606,12 @@
                 document.getElementById('marketStatus').textContent = 'Please set all settings first!';
                 return;
             }
-            const response = await fetch(`${API_URL}/start-market-maker`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(settings)
-            });
-            const data = await response.json();
+            document.getElementById('startButton').disabled = true;
+            document.getElementById('stopButton').disabled = false;
             settings.isRunning = true;
             localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
-            document.getElementById('marketStatus').textContent = data.message || 'Market maker started!';
+            document.getElementById('marketStatus').textContent = 'Market maker started!';
+            runMarketMakerCycle(); // Keep existing cycle intact
         }
 
         async function stopMarketMaker() {
@@ -490,14 +619,49 @@
                 document.getElementById('marketStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
                 return;
             }
-            const response = await fetch(`${API_URL}/stop-market-maker`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' }
-            });
-            const data = await response.json();
+            document.getElementById('startButton').disabled = false;
+            document.getElementById('stopButton').disabled = true;
             settings.isRunning = false;
             localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
-            document.getElementById('marketStatus').textContent = data.message || 'Market maker stopped!';
+            document.getElementById('marketStatus').textContent = 'Market maker stopped!';
+        }
+
+        async function runMarketMakerCycle() {
+            while (settings.isRunning) {
+                for (let loopIndex = 0; loopIndex < settings.makerLoops.length; loopIndex++) {
+                    const walletList = settings.makerLoops[loopIndex];
+                    let walletIndex = 0;
+                    while (settings.isRunning && walletList[walletIndex].isFunded) {
+                        const wallet = walletList[walletIndex];
+                        const keypair = solanaWeb3.Keypair.fromSecretKey(Buffer.from(wallet.secretKey, 'base64'));
+                        const solBalance = await checkSolBalance(keypair.publicKey);
+                        if (solBalance > settings.buyAmount + 0.005) {
+                            const transaction = new solanaWeb3.Transaction().add(
+                                solanaWeb3.SystemProgram.transfer({
+                                    fromPubkey: keypair.publicKey,
+                                    toPubkey: new solanaWeb3.PublicKey(settings.tokenCA),
+                                    lamports: Math.floor(settings.buyAmount * LAMPORTS_PER_SOL)
+                                })
+                            );
+                            const result = await sendTransaction(transaction, [keypair]);
+                            if (result.success) console.log(`Buy executed for ${settings.buyAmount} SOL`);
+                        }
+                        walletIndex = (walletIndex + 1) % walletList.length;
+                        await delay(Math.random() * (settings.buyCycleMax - settings.buyCycleMin) + settings.buyCycleMin * 1000);
+                    }
+                }
+            }
+        }
+
+        async function checkSolBalance(walletAddress) {
+            const connection = new solanaWeb3.Connection('https://api.mainnet-beta.solana.com', 'confirmed');
+            try {
+                const balance = await connection.getBalance(new solanaWeb3.PublicKey(walletAddress));
+                return balance / LAMPORTS_PER_SOL;
+            } catch (error) {
+                console.error(`Sol balance check failed: ${error.message}`);
+                return 0;
+            }
         }
 
         async function askAlphaAI() {
@@ -505,28 +669,15 @@
                 document.getElementById('alphaAIResponse').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
                 return;
             }
-            const question = document.getElementById('alphaAIQuestion').value;
-            const response = await fetch(`${API_URL}/alpha-ai`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question, wallet: settings.connectedWallet })
-            }).then(res => res.json()).then(data => data.response);
-            document.getElementById('alphaAIResponse').textContent = response || 'No response from AlphaAI.';
-        }
-
-        async function viewReports() {
-            if (!settings.isVerified) {
-                document.getElementById('reportsStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
-                return;
+            const question = prompt('Ask AlphaAI (e.g., "How much volume with 1 SOL?")');
+            if (question) {
+                const response = await fetch(`${API_URL}/alpha-ai`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question, wallet: settings.connectedWallet })
+                }).then(res => res.json()).then(data => data.response);
+                document.getElementById('alphaAIResponse').textContent = response || 'No response from AlphaAI.';
             }
-            const tokenCA = settings.tokenCA;
-            if (!tokenCA) {
-                document.getElementById('reportsStatus').textContent = 'No token CA set!';
-                return;
-            }
-            const response = await fetch(`${API_URL}/view-reports?tokenCA=${tokenCA}&wallet=${settings.connectedWallet}`);
-            const data = await response.json();
-            document.getElementById('reportsStatus').textContent = data.message || 'No reports available.';
         }
 
         // Initialize settings from localStorage
@@ -537,15 +688,17 @@
         document.getElementById('buyAmount').value = settings.buyAmount;
         document.getElementById('buyCycleMin').value = settings.buyCycleMin;
         document.getElementById('buyCycleMax').value = settings.buyCycleMax;
-        document.getElementById('keepMakersEnabled').checked = settings.keepMakersEnabled;
-        document.getElementById('keepMakersPercent').value = settings.keepMakersPercent;
-        document.getElementById('keepMakersPercent').disabled = !settings.keepMakersEnabled;
+        document.getElementById('enableHolders').checked = settings.numHolders > 0;
+        document.getElementById('numHolders').value = settings.numHolders;
+        document.getElementById('holderFundingAmount').value = settings.holderFundingAmount;
+        document.getElementById('holderFundingAmount').disabled = !settings.numHolders;
+        document.querySelector(`input[name="buyStrategy"][value="${settings.buyStrategy}"]`)?.checked = true;
+        document.getElementById('holderFields').style.display = settings.numHolders > 0 ? 'block' : 'none';
+        updateTokenInfo();
+        updateSettings();
 
-        document.getElementById('keepMakersEnabled').addEventListener('change', () => {
-            document.getElementById('keepMakersPercent').disabled = !document.getElementById('keepMakersEnabled').checked;
-        });
+        document.getElementById('enableHolders').addEventListener('change', toggleHolderFields);
 
-        // Sidebar toggle function
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
         }
