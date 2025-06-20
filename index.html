@@ -36,7 +36,7 @@
         }
 
         .sidebar .logo-image {
-            width: 80%; /* 2x bigger from 40% */
+            width: 100%; /* Increased from 80% to make it a bit bigger */
             transform: scaleX(-1);
             margin-bottom: 20px;
             display: block;
@@ -60,13 +60,7 @@
         }
 
         .sidebar ul li img {
-            width: 72px; /* Uniform size */
-            height: 72px; /* Uniform size */
-            margin-right: 10px;
-        }
-
-        .sidebar ul li .mirrored {
-            transform: scaleX(-1);
+            display: none; /* Remove all sidebar menu icons */
         }
 
         .sidebar ul li a {
@@ -182,16 +176,16 @@
         <div class="logo">alphaT00LS</div>
         <ul>
             <li><a href="#">Home</a></li>
-            <li><img src="/images/alphaheadshot.png" alt="Ask AlphaAI Icon" class="mirrored" onload="console.log('Loaded: alphaheadshot.png')" onerror="console.log('Failed to load alphaheadshot.png')"><a href="#">Ask AlphaAI</a></li>
-            <li><img src="/images/alphaAI-Chart.png" alt="alphaMAK3R Icon" onload="console.log('Loaded: alphaAI-Chart.png')" onerror="console.log('Failed to load alphaAI-Chart.png')"><a href="#">alphaMAK3R</a></li>
-            <li><img src="/images/pumpfun.png" alt="Pump.FUN Icon" onload="console.log('Loaded: pumpfun.png')" onerror="console.log('Failed to load pumpfun.png')"><a href="#">Pump.FUN Tool-Kit</a></li>
-            <li><img src="/images/chainmail.png" alt="ChainMail Icon" onload="console.log('Loaded: chainmail.png')" onerror="console.log('Failed to load chainmail.png')"><a href="#">ChainMail</a></li>
-            <li><img src="/images/fbraider.png" alt="alphaRAIDER Icon" onload="console.log('Loaded: fbraider.png')" onerror="console.log('Failed to load fbraider.png')"><a href="#">alphaRAIDER</a></li>
-            <li><img src="/images/spotify.png" alt="alphaTUNES Icon" onload="console.log('Loaded: spotify.png')" onerror="console.log('Failed to load spotify.png')"><a href="#">alphaTUNES</a></li>
-            <li><img src="/images/whale.png" alt="Whale Enforcer Icon" onload="console.log('Loaded: whale.png')" onerror="console.log('Failed to load whale.png')"><a href="#">Whale Enforcer</a></li>
-            <li><img src="/images/solanarocket.webp" alt="News Icon" onload="console.log('Loaded: solanarocket.webp')" onerror="console.log('Failed to load solanarocket.webp')"><a href="#">News</a></li>
-            <li><img src="/images/roadmap.png" alt="Roadmap Icon" onload="console.log('Loaded: roadmap.png')" onerror="console.log('Failed to load roadmap.png')"><a href="#">Roadmap</a></li>
-            <li><img src="/images/aboutUs.png" alt="About Us Icon" onload="console.log('Loaded: aboutUs.png')" onerror="console.log('Failed to load aboutUs.png')"><a href="#">About Us</a></li>
+            <li><a href="#">Ask AlphaAI</a></li>
+            <li><a href="#">alphaMAK3R</a></li>
+            <li><a href="#">Pump.FUN Tool-Kit</a></li>
+            <li><a href="#">ChainMail</a></li>
+            <li><a href="#">alphaRAIDER</a></li>
+            <li><a href="#">alphaTUNES</a></li>
+            <li><a href="#">Whale Enforcer</a></li>
+            <li><a href="#">News</a></li>
+            <li><a href="#">Roadmap</a></li>
+            <li><a href="#">About Us</a></li>
         </ul>
     </div>
     <div class="main-content">
