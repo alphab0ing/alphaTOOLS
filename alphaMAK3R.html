@@ -546,8 +546,8 @@
             if (settings.tokenCA && settings.tokenInfo) {
                 const totalHolders = settings.numHolders;
                 const holderPercentage = totalHolders > 0 ? (settings.holderFundingAmount * totalHolders / 100) : 0;
-                const expectedVolume = settings.buyAmount * settings.numMakers * 100; // Simplified estimate
-                const estimatedRuntime = ((settings.buyCycleMin + settings.buyCycleMax) / 2) * settings.numMakers * 60 / 3600; // Average cycle time * makers, converted to hours
+                const expectedVolume = settings.buyAmount * settings.numMakers * 100;
+                const estimatedRuntime = (settings.buyCycleMin + settings.buyCycleMax) / 2 * settings.numMakers * 60; // Minutes to hours
                 document.getElementById('summaryContent').innerHTML = `
                     <strong>Settings Summary:</strong><br>
                     Token: ${settings.tokenInfo.name} (${settings.tokenInfo.symbol})<br>
@@ -555,7 +555,7 @@
                     Price: ${settings.tokenInfo.price} | Market Cap: ${settings.tokenInfo.marketCap}<br>
                     Settings: ${settings.numMakers} Makers, Buy Amount: ${settings.buyAmount} SOL, Cycle: ${settings.buyCycleMin}-${settings.buyCycleMax}s<br>
                     Estimated Volume: ~${expectedVolume.toFixed(2)} SOL<br>
-                    Estimated Runtime: ~${estimatedRuntime.toFixed(1)} hours
+                    Estimated Runtime: ~${(estimatedRuntime / 3600).toFixed(1)} hours
                 `;
                 document.getElementById('settingsSummary').style.display = 'block';
                 if (totalHolders > 0) {
