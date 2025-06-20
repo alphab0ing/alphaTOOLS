@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask AlphaAI - alphaT00LS</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to a shared CSS file or inline it below -->
+    <style>
+        body {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 250px 40px 0 0; /* Adjust for sidebar */
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            max-width: 200px; /* Adjustable size for bunnyAlpha.png */
+            height: auto;
+            margin-right: 20px;
+        }
+        .header .title {
+            font-size: 24px;
+            margin-top: 0;
+            text-align: left;
+        }
+        .model-select {
+            margin-bottom: 20px;
+        }
+        #modelDetails {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #1e1e1e;
+            border-radius: 5px;
+        }
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 40vh;
+            background-color: #1e1e1e;
+            border-radius: 5px;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .user-message { background-color: #3498db; }
+        .ai-message { background-color: #2c3e50; }
+        #input-area {
+            display: flex;
+            margin-top: 20px;
+        }
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            background-color: #333;
+            color: #fff;
+        }
+        #send-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            background-color: #b85b1c;
+            color: #fff;
+            cursor: pointer;
+        }
+        #send-btn:hover {
+            background-color: #a34f19;
+        }
+        #file-upload {
+            margin-top: 20px;
+        }
+        #image-controls {
+            margin-top: 20px;
+        }
+        #generated-image, #uploaded-image {
+            max-width: 100%;
+            margin-top: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+        select, button {
+            padding: 5px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="/images/bunnyAlpha.png" alt="Bunny Alpha" onload="console.log('Loaded: bunnyAlpha.png')" onerror="console.log('Failed to load bunnyAlpha.png')">
+            <div class="title">Ask Alpha, the brains behind alphaTOOLS...</div>
+        </div>
+        <div class="model-select">
+            <label for="modelSelect">Select AI Model: </label>
+            <select id="modelSelect" onchange="updateModelDetails()">
+                <option value="">Loading models...</option>
+            </select>
+            <div id="modelDetails">Select a model to see its capabilities.</div>
+        </div>
+        <div id="chat-container">
+            <div id="chat-messages"></div>
+        </div>
+        <div id="input-area">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button id="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+        <div id="file-upload">
+            <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)">
+            <button onclick="processImage()">Process Image</button>
+        </div>
+        <div id="image-controls">
+            <select id="imageAction" onchange="updateImageAction()">
+                <option value="generate">Generate Image</option>
+                <option value="upscale">Upscale Image</option>
+                <option value="style">Apply Style</option>
+            </select>
+            <input type="text" id="imagePrompt" placeholder="Describe the image to generate...">
+            <button onclick="generateImage()">Go</button>
+        </div>
+        <img id="generated-image" alt="Generated Image">
+        <img id="uploaded-image" alt="Uploaded Image">
+    </div>
+
+    <script>
+        const VENICE_API_KEY = 'eH8_SieGmQiRNiTdUsjx-Vwe2uQC_YWAEhYMnNL4Re';
+        const VENICE_IMAGE_API_KEY = 'zFHG0PrIcDMI2s4Go567Cbc-4_SNaXfaa3YplplX95';
+        const VENICE_API_URL = 'https://api.venice.ai/api/v1';
+        let selectedModel = '';
+        let uploadedImage = null;
+
+        // Fetch and populate model list
+        async function loadModels() {
+            try {
+                const response = await fetch(`${VENICE_API_URL}/models`, {
+                    headers: { 'Authorization': `Bearer ${VENICE_API_KEY}` }
+                });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                const select = document.getElementById('modelSelect');
+                select.innerHTML = '<option value="">Select a model</option>';
+                data.data.forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model.id;
+                    option.textContent = `${model.id} (${model.traits ? model.traits.join(', ') : 'No traits'})`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading models:', error.message, error);
+                document.getElementById('modelSelect').innerHTML = '<option value="">Error loading models</option>';
+            }
+        }
+
+        // Update model details
+        function updateModelDetails() {
+            const select = document.getElementById('modelSelect');
+            const details = document.getElementById('modelDetails');
+            selectedModel = select.value;
+            if (selectedModel) {
+                details.textContent = `Model: ${selectedModel}. Capabilities: ${getModelCapabilities(selectedModel)}`;
+            } else {
+                details.textContent = 'Select a model to see its capabilities.';
+            }
+        }
+
+        // Get model capabilities (based on traits or documentation)
+        function getModelCapabilities(modelId) {
+            const capabilities = {
+                'llama-3.3-70b': 'Text, Chat, NSFW',
+                'fluently-xl': 'Image Generation, NSFW',
+                'qwen-2.5-vl': 'Text, Image, Vision',
+                'deepseek-r1-671b': 'Text, Code, Crypto',
+                // Add more models from Venice docs as needed
+            };
+            return capabilities[modelId] || 'Text, Chat';
+        }
+
+        // Send chat message
+        async function sendMessage() {
+            const input = document.getElementById('user-input');
+            const message = input.value.trim();
+            if (!message || !selectedModel) return;
+
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.innerHTML += `<div class="message user-message">${message}</div>`;
+
+            input.value = '';
+            input.focus();
+
+            try {
+                const response = await fetch(`${VENICE_API_URL}/chat/completions`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${VENICE_API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: selectedModel,
+                        messages: [{ role: 'user', content: message }],
+                        venice_parameters: { include_venice_system_prompt: true },
+                        max_tokens: 1000,
+                        stream: false
+                    })
+                });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                chatMessages.innerHTML += `<div class="message ai-message">${data.choices[0].message.content}</div>`;
+            } catch (error) {
+                chatMessages.innerHTML += `<div class="message ai-message">Error: ${error.message}</div>`;
+            }
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Handle file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                uploadedImage = e.target.result;
+                document.getElementById('uploaded-image').src = uploadedImage;
+                document.getElementById('uploaded-image').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Process image (generate, upscale, or style)
+        async function processImage() {
+            const action = document.getElementById('imageAction').value;
+            const prompt = document.getElementById('imagePrompt').value;
+            if (!uploadedImage && action !== 'generate') return alert('Please upload an image first!');
+            if (!selectedModel) return alert('Please select a model!');
+
+            const formData = new FormData();
+            formData.append('model', selectedModel);
+            if (uploadedImage && action !== 'generate') {
+                const blob = await fetch(uploadedImage).then(r => r.blob());
+                formData.append('image', blob, 'uploaded.jpg');
+            }
+            if (prompt) formData.append('prompt', prompt);
+
+            try {
+                let endpoint = '';
+                let key = VENICE_IMAGE_API_KEY;
+                if (action === 'generate') endpoint = `${VENICE_API_URL}/image/generate`;
+                else if (action === 'upscale') endpoint = `${VENICE_API_URL}/image/upscale`;
+                else if (action === 'style') endpoint = `${VENICE_API_URL}/image/styles`;
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${key}` },
+                    body: formData
+                });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                const imageUrl = URL.createObjectURL(await (await fetch(data.image_url || data.url)).blob());
+                document.getElementById('generated-image').src = imageUrl;
+                document.getElementById('generated-image').style.display = 'block';
+            } catch (error) {
+                document.getElementById('chat-messages').innerHTML += `<div class="message ai-message">Error processing image: ${error.message}</div>`;
+            }
+        }
+
+        // Update image action UI
+        function updateImageAction() {
+            const action = document.getElementById('imageAction').value;
+            document.getElementById('imagePrompt').placeholder = action === 'generate' ? 'Describe the image to generate...' : 'Enter style or prompt...';
+        }
+
+        // Initialize
+        loadModels();
+        document.getElementById('user-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
