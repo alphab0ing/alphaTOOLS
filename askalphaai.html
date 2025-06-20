@@ -84,12 +84,13 @@
         }
 
         .main-content {
-            margin-left: 180px;
+            margin-left: 250px;
             padding: 40px;
             flex-grow: 1;
             width: 100%;
             box-sizing: border-box;
-            margin-top: 30px; /* 1/4 inch below wallet-connect (top: 20px) */
+            max-width: 800px; /* Reverted to original width to prevent stretching */
+            margin-top: 96px; /* 1-inch gap below wallet-connect (top: 20px) */
         }
 
         .header {
@@ -98,7 +99,7 @@
             margin-bottom: 20px;
         }
         .header .title {
-            font-size: 28px;
+            font-size: 24px; /* Reverted to original size */
             text-align: center;
             margin-bottom: 10px;
         }
@@ -108,13 +109,12 @@
             align-items: center;
         }
         .header .image-row img {
-            max-width: 240px;
+            max-width: 200px; /* Reverted to original size */
             height: auto;
-            flex: 1;
         }
 
         .model-select {
-            margin-bottom: 20px; /* Retained for gap between dropdown and #modelDetails */
+            margin-bottom: 0; /* Reverted to original (no explicit margin) */
         }
         #modelDetails {
             margin-bottom: 20px;
@@ -154,12 +154,12 @@
             padding: 10px 20px;
             border: none;
             border-radius: 0 5px 5px 0;
-            background-color: #c66b2c; /* Lighter burnt orange to match settings */
+            background-color: #c66b2c;
             color: #fff;
             cursor: pointer;
         }
         #send-btn:hover {
-            background-color: #d07b3c; /* Lighter hover shade */
+            background-color: #d07b3c;
         }
         #file-upload {
             margin-top: 20px;
@@ -200,7 +200,7 @@
         }
 
         .wallet-connect button {
-            background-color: #c66b2c; /* Lighter burnt orange to match settings */
+            background-color: #c66b2c;
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -209,7 +209,7 @@
         }
 
         .wallet-connect button:hover {
-            background-color: #d07b3c; /* Lighter hover shade */
+            background-color: #d07b3c;
         }
 
         .wallet-status {
@@ -245,7 +245,7 @@
             position: fixed;
             top: 20px;
             left: 20px;
-            background-color: #c66b2c; /* Lighter burnt orange */
+            background-color: #c66b2c;
             color: #ffffff;
             border: none;
             padding: 10px;
@@ -254,7 +254,7 @@
         }
 
         .menu-toggle:hover {
-            background-color: #d07b3c; /* Lighter hover shade */
+            background-color: #d07b3c;
         }
 
         @media (max-width: 768px) {
