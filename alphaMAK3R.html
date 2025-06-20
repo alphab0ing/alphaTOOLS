@@ -301,43 +301,31 @@
             </div>
             <div class="input-group">
                 <label>Makers/Loops: <input type="number" id="numMakers" min="1" value="1" oninput="updateSettings()"></label>
-                <span class="small-text">The number of makers you have will be the number of wallets that will be buying and selling within your chosen buy cycle duration.</span>
-            </div>
-            <div class="input-group">
                 <label>Buy Amount (SOL): <input type="number" id="buyAmount" step="0.001" value="0.05" oninput="updateSettings()"></label>
-                <span class="small-text">The volume maker will be buying and selling random amounts ± your set buy amount.</span>
             </div>
             <div class="input-group">
-                <label>Buy Cycle Min (s): <input type="number" id="buyCycleMin" min="5" value="30" oninput="updateSettings()"></label>
-                <span class="small-text">Buy Cycle adjusts how organic your buys look on your chart or how quickly they're happening. This will also affect how long your bot will run overall.</span>
+                <div class="small-text">The number of makers you have will be the number of wallets that will be buying and selling within your chosen buy cycle duration.</div>
+                <div class="small-text">The volume maker will be buying and selling random amounts ± your set buy amount.</div>
             </div>
             <div class="input-group">
+                <label>Buy Cycle:
+                    <div class="small-text">Adjusting the buy cycle will change how fast your volume is generated, how organic the buys and sells look on your chart and how long the bot will run overall.</div>
+                </label>
+                <label>Min (s): <input type="number" id="buyCycleMin" min="5" value="30" oninput="updateSettings()"></label>
                 <label>Max (s): <input type="number" id="buyCycleMax" min="10" value="40" oninput="updateSettings()"></label>
-                <span class="small-text">Buy Cycle adjusts how organic your buys look on your chart or how quickly they're happening. This will also affect how long your bot will run overall.</span>
             </div>
             <div class="input-group">
-                <button onclick="saveSettings()">Save</button>
-                <button onclick="clearSettings()">Clear</button>
-            </div>
-            <div id="settingsSummary" class="section" style="display: none;">
-                <h2>Settings Summary</h2>
-                <div id="summaryContent" class="small-text"></div>
-            </div>
-        </div>
-        <div class="section">
-            <h2 class="medium-text">Additional Holders</h2>
-            <div class="small-text">If selected, the market maker will add additional holders to your token while running the volume bot, enhancing hype with increased volume and holder count.</div>
-            <div class="input-group">
-                <label>Enable Extra Holders? 
+                <label>Enable Boost Holders? 
                     <input type="checkbox" id="enableHolders" onchange="toggleHolderFields()">
                 </label>
+                <div class="small-text">Automatically create new wallet addresses and complete purchases, increasing trading activity and the number of token holders. Real trades help optimize on-chain data, enhancing the project's competitiveness in the market and making it stand out!!</div>
             </div>
             <div id="holderFields" style="display: none;">
                 <div class="input-group">
-                    <label># Additional Holders: <input type="number" id="numHolders" min="1" value="0" oninput="updateSettings()"></label>
-                    <label>Holder Funding Amount (SOL): <input type="number" id="holderFundingAmount" step="0.001" value="0" oninput="updateSettings()" disabled></label>
+                    <label>Qty. New Holders: <input type="number" id="numHolders" min="1" value="0" oninput="updateSettings()"></label>
+                    <label>Buy Amount (SOL): <input type="number" id="holderFundingAmount" step="0.001" value="0" oninput="updateSettings()" disabled></label>
                 </div>
-                <div class="small-text">Holder Buy-In Strategy - Choose a method for holders to buy in, each with unique benefits:</div>
+                <div class="small-text">Buy-In Strategy - Choose a method for holders to buy in, each with unique benefits:</div>
                 <div class="input-group">
                     <label><input type="checkbox" name="buyStrategy" value="organic"> 1. Organic Buy-In</label>
                     <span class="small-text">Buys holders at random intervals for an organic look, speeding up with rising market cap.</span>
@@ -355,6 +343,12 @@
                 <button onclick="saveSettings()">Save</button>
                 <button onclick="clearSettings()">Clear</button>
             </div>
+            <div id="settingsSummary" class="section" style="display: none;">
+                <h2>Settings Summary</h2>
+                <div id="summaryContent" class="small-text"></div>
+            </div>
+        </div>
+        <div class="section">
             <div id="holderSummary" class="section" style="display: none;">
                 <h2>Holder Summary</h2>
                 <div id="holderSummaryContent" class="small-text"></div>
