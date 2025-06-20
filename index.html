@@ -18,6 +18,7 @@
             color: #ffffff;
             display: flex;
             min-height: 100vh;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
 
         .sidebar {
@@ -59,40 +60,9 @@
         }
 
         .sidebar ul li img {
-            width: 72px; /* Base size for other images */
-            height: 72px; /* Base size for other images */
+            width: 72px; /* Uniform size */
+            height: 72px; /* Uniform size */
             margin-right: 10px;
-        }
-
-        /* Specific adjustments */
-        .sidebar ul li:nth-child(4) img { /* alphaMAK3R */
-            width: 79.2px; /* 72 * 1.1 */
-            height: 93.6px; /* 72 * 1.3 */
-        }
-
-        .sidebar ul li:nth-child(5) img { /* Pump.FUN Tool-Kit */
-            width: 50.4px; /* 72 * 0.7 */
-            height: 50.4px; /* 72 * 0.7 */
-        }
-
-        .sidebar ul li:nth-child(6) img { /* ChainMail */
-            height: 64.8px; /* 72 * 0.9 */
-            width: 72px; /* Unchanged */
-        }
-
-        .sidebar ul li:nth-child(7) img { /* alphaRAIDER */
-            width: 108px; /* 72 * 1.5 */
-            height: 90px; /* 72 * 1.25 */
-        }
-
-        .sidebar ul li:nth-child(8) img { /* alphaTUNES */
-            height: 64.8px; /* 72 * 0.9 */
-            width: 72px; /* Unchanged */
-        }
-
-        .sidebar ul li:nth-child(12) img { /* About Us */
-            height: 64.8px; /* 72 * 0.9 */
-            width: 72px; /* Unchanged */
         }
 
         .sidebar ul li .mirrored {
@@ -114,13 +84,15 @@
             margin-left: 250px;
             padding: 40px;
             flex-grow: 1;
+            width: 100%; /* Ensure full width */
+            box-sizing: border-box;
         }
 
         .banner {
-            width: 110%; /* 10% wider than 100% of container, adjusted for sidebar */
+            width: 100%; /* Fit end-to-end */
             height: auto; /* Maintain aspect ratio */
+            max-width: 100vw; /* Prevent overflow */
             margin-bottom: 20px;
-            transform: scaleY(0.95); /* 5% shorter */
         }
 
         .hero {
@@ -129,7 +101,7 @@
         }
 
         .hero h1 {
-            font-size: 36px;
+            font-size: 48px; /* Increased from 36px for bigger font */
             margin-bottom: 20px;
         }
 
@@ -216,7 +188,7 @@
             <li><img src="/images/chainmail.png" alt="ChainMail Icon" onload="console.log('Loaded: chainmail.png')" onerror="console.log('Failed to load chainmail.png')"><a href="#">ChainMail</a></li>
             <li><img src="/images/fbraider.png" alt="alphaRAIDER Icon" onload="console.log('Loaded: fbraider.png')" onerror="console.log('Failed to load fbraider.png')"><a href="#">alphaRAIDER</a></li>
             <li><img src="/images/spotify.png" alt="alphaTUNES Icon" onload="console.log('Loaded: spotify.png')" onerror="console.log('Failed to load spotify.png')"><a href="#">alphaTUNES</a></li>
-            <li><img src="/images/whale.ong" alt="Whale Enforcer Icon" onload="console.log('Loaded: whale.png')" onerror="console.log('Failed to load whale.png')"><a href="#">Whale Enforcer</a></li>
+            <li><img src="/images/whale.png" alt="Whale Enforcer Icon" onload="console.log('Loaded: whale.png')" onerror="console.log('Failed to load whale.png')"><a href="#">Whale Enforcer</a></li>
             <li><img src="/images/solanarocket.webp" alt="News Icon" onload="console.log('Loaded: solanarocket.webp')" onerror="console.log('Failed to load solanarocket.webp')"><a href="#">News</a></li>
             <li><img src="/images/roadmap3.webp" alt="Roadmap Icon" onload="console.log('Loaded: roadmap3.webp')" onerror="console.log('Failed to load roadmap3.webp')"><a href="#">Roadmap</a></li>
             <li><img src="/images/aboutUs.png" alt="About Us Icon" onload="console.log('Loaded: aboutUs.png')" onerror="console.log('Failed to load aboutUs.png')"><a href="#">About Us</a></li>
@@ -226,7 +198,8 @@
         <img src="/images/mainBanner.png" alt="Main Banner" class="banner" onload="console.log('Loaded: mainBanner.png')" onerror="console.log('Failed to load mainBanner.png')">
         <div class="hero">
             <h1>Welcome to alphaT00LS</h1>
-            <p>Explore our suite of cutting-edge tools designed to empower your journey in the digital world. From AI-driven insights to advanced automation, alphaT00LS has you covered.</p>
+            <p>Explore our suite of cutting-edge tools designed specifically for token dev teams and traders. Hundreds of hours of research goes into all of our tools to empower our users with nothing but the best possible experience coupled with expert support and advice helping ensure you the best opportunity for $SUCCESS.</p>
+            <p>Be sure to follow our news for important upcoming announcements and product releases! Feel free to stop by our social media platforms, your feedback helps us ensure we can provide nothing but the best!</p>
         </div>
     </div>
     <div class="contact-links">
