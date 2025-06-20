@@ -20,7 +20,7 @@
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
-            padding-top: 280px; /* Increased to avoid overlap with top buttons */
+            padding-top: 0; /* Removed excessive padding, using margin-top on .main-content */
         }
 
         .sidebar {
@@ -89,6 +89,7 @@
             flex-grow: 1;
             width: 100%;
             box-sizing: border-box;
+            margin-top: 20px; /* 1/4 inch below wallet-connect (top: 20px) */
         }
 
         .header {
@@ -113,7 +114,7 @@
         }
 
         .model-select {
-            margin-bottom: 80px; /* Increased from 50px to 80px for a much larger gap */
+            margin-bottom: 80px; /* Retained for gap between dropdown and #modelDetails */
         }
         #modelDetails {
             margin-bottom: 20px;
@@ -325,7 +326,7 @@
             <div class="title">Ask Alpha, the brains behind alphaTOOLS...</div>
             <div class="image-row">
                 <img src="/images/bunnyAlpha.png" alt="Bunny Alpha" onload="console.log('Loaded: bunnyAlpha.png')" onerror="console.log('Failed to load bunnyAlpha.png')">
-                <img src="/images/babyalpha.png" alt="Small AlphaAI" onload="console.log('Loaded: babyalpha.png')" onerror="console.log('Failed to load babyalpha.png')">
+                <img src="/images/babyalpha.png" alt="Baby AlphaAI" onload="console.log('Loaded: babyalpha.png')" onerror="console.log('Failed to load babyalpha.png')">
             </div>
         </div>
         <div class="model-select">
