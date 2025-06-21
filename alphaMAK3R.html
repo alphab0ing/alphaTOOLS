@@ -70,28 +70,30 @@
         .top-fixed-area {
             position: fixed;
             top: 0;
-            left: 250px; /* Adjusted to account for sidebar width */
-            width: 100%;
-            background-color: transparent; /* Make background transparent */
-            z-index: 1000; /* Keep above content but below menu toggle */
+            left: 250px; /* Start after sidebar */
+            right: 0; /* Extend to right edge */
+            width: calc(100% - 250px); /* Full width minus sidebar */
+            background-color: #2a2a2a; /* Solid background */
+            z-index: 1000; /* Above content */
             padding: 10px 20px;
             box-sizing: border-box;
             display: flex;
             justify-content: space-between;
             align-items: center;
             height: 60px;
-            border-bottom: none; /* Remove the border line */
+            border-bottom: none;
         }
         .main-content {
             margin-top: 60px; /* Same as top-fixed-area height */
             margin-left: 250px;
             padding: 30px;
+            margin-top: 60px; /* Space for top-fixed-area */
             flex-grow: 1;
             width: 90%;
             box-sizing: border-box;
         }
         .menu-toggle {
-            z-index: 1001; /* Above the top-fixed-area */
+            z-index: 2001; /* Above the top-fixed-area */
         }
         .news-section {
             flex-grow: 1;
