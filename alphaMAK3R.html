@@ -414,6 +414,36 @@
             max-width: 400px;
         }
 
+        #tokenInfo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 50px;
+        background: #444;
+        padding: 8px;
+        border-radius: 5px;
+    }
+
+    #tokenInfo img {
+        max-width: 50px;
+        height: auto;
+        border-radius: 25px;
+        background: #555;
+    }
+
+    #tokenInfo div {
+        line-height: 1.4;
+    }
+
+    #tokenInfo a {
+        color: #b85b1c;
+        text-decoration: none;
+    }
+
+    #tokenInfo a:hover {
+        text-decoration: underline;
+    }
+
         .holder-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -468,10 +498,17 @@
             
             <div class="settings-container">
                 <!-- Token CA -->
-                <div class="settings-input">
-                    <label class="settings-label">Token CA:</label>
-                    <input type="text" id="tokenCA" placeholder="Enter Token CA" oninput="updateTokenInfo()">
-                    <div id="tokenInfo" class="settings-description"></div>
+                <div class="settings-input" style="display: flex; align-items: center; gap: 20px;">
+                    <div style="flex: 1;">
+                        <label class="settings-label">Token CA:</label>
+                        <input type="text" id="tokenCA" placeholder="Enter Token CA" oninput="updateTokenInfo()" style="width: 100%;">
+                    </div>
+                    <div style="flex: 2;">
+                        <label class="settings-label">Token Info:</label>
+                        <div id="tokenInfo" class="settings-description" style="display: flex; align-items: center; gap: 10px; min-height: 50px; background: #444; padding: 8px; border-radius: 5px;">
+                            <!-- Token info will appear here -->
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Makers/Loops and Buy Amount side by side -->
@@ -697,18 +734,34 @@
                         marketCap: pair.marketCap ? `$${parseFloat(pair.marketCap).toFixed(2)}` : 'N/A',
                         image: pair.baseToken?.logoURL || '/images/default-token.png'
                     };
-                    document.getElementById('tokenInfo').innerHTML = `
-                        <span>${settings.tokenInfo.name} (${settings.tokenInfo.symbol})</span>
-                        <br><a href="https://app.axiom.io/explore/${tokenCA}" target="_blank">View on Axiom</a>
-                        <br>Price: ${settings.tokenInfo.price} | Market Cap: ${settings.tokenInfo.marketCap}
-                        <img src="${settings.tokenInfo.image}" alt="Token Image" style="max-width: 50px;">
+                    
+                    // Create image element with error handling
+                    const img = new Image();
+                    img.src = settings.tokenInfo.image;
+                    img.style.maxWidth = '50px';
+                    img.onerror = function() {
+                        this.src = '/images/default-token.png'; // Fallback image
+                        console.log('Failed to load token image, using fallback');
+                    };
+                    
+                    document.getElementById('tokenInfo').innerHTML = '';
+                    document.getElementById('tokenInfo').appendChild(img);
+                    
+                    const infoDiv = document.createElement('div');
+                    infoDiv.innerHTML = `
+                        <div><strong>${settings.tokenInfo.name} (${settings.tokenInfo.symbol})</strong></div>
+                        <div>Price: ${settings.tokenInfo.price}</div>
+                        <div>Market Cap: ${settings.tokenInfo.marketCap}</div>
+                        <div><a href="https://app.axiom.io/explore/${tokenCA}" target="_blank">View on Axiom</a></div>
                     `;
+                    document.getElementById('tokenInfo').appendChild(infoDiv);
+                    
                 } catch (error) {
-                    document.getElementById('tokenInfo').innerHTML = 'Error fetching token info';
+                    document.getElementById('tokenInfo').innerHTML = '<div>Error fetching token info</div>';
                     console.error('Token info fetch failed:', error);
                 }
             } else {
-                document.getElementById('tokenInfo').innerHTML = '';
+                document.getElementById('tokenInfo').innerHTML = '<div>Enter token CA to load info</div>';
             }
             updateSettings();
         }
