@@ -66,6 +66,102 @@
             background-color: #b85b1c;
             color: #fff;
         }
+        .top-fixed-area {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2a2a2a; /* Match body background */
+            z-index: 1001; /* Above sidebar (z-index: 1000) and other content */
+            padding: 10px 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px; /* Match the height of wallet-connect and news area */
+            border-bottom: 1px solid #444; /* Optional: Add a subtle separator */
+        }
+        .news-section {
+            flex-grow: 1;
+            text-align: center;
+            color: #fff;
+            font-size: 14px;
+            padding: 0 20px;
+        }
+        .wallet-connect {
+            display: flex;
+            align-items: center;
+        }
+        .wallet-connect img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            transition: transform 0.2s;
+        }
+        .wallet-connect img:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+        .wallet-connect button {
+            background-color: #b85b1c;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .news-section {
+            flex-grow: 1;
+            text-align: center;
+            color: #fff;
+            font-size: 14px;
+            padding: 0 20px;
+        }
+        .wallet-connect {
+            display: flex;
+            align-items: center;
+        }
+
+        .wallet-connect img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            transition: transform 0.2s;
+        }
+        .wallet-connect img:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+        .wallet-connect button {
+            background-color: #b85b1c;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .wallet-connect button:hover {
+            background-color: #a34f19;
+        }
+        .wallet-status {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            color: #fff;
+        }
+        .wallet-connect button:hover {
+            background-color: #a34f19;
+        }
+        .wallet-status {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            color: #fff;
+        }
         .main-content {
             margin-left: 250px;
             padding: 30px;
@@ -302,10 +398,15 @@
 </head>
 <body>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-    <div class="wallet-connect">
-        <img src="/images/settings.png" alt="Settings" onload="console.log('Loaded: settings.png')" onerror="console.log('Failed to load settings.png')">
-        <button onclick="connectWallet()">Connect Wallet</button>
-        <div id="wallet-status" class="wallet-status"></div>
+        <div class="top-fixed-area">
+        <div class="wallet-connect">
+            <img src="/images/settings.png" alt="Settings" onload="console.log('Loaded: settings.png')" onerror="console.log('Failed to load settings.png')">
+            <button onclick="connectWallet()">Connect Wallet</button>
+            <div id="wallet-status" class="wallet-status"></div>
+        </div>
+        <div class="news-section">
+            <p>Latest News: Check back for updates on alphaT00LS features!</p>
+        </div>
     </div>
     <div class="sidebar" id="sidebar">
         <img src="/images/littleOrangeAlpha.png" alt="alphaT00LS Logo" class="logo-image" onload="console.log('Loaded: littleOrangeAlpha.png')" onerror="console.log('Failed to load littleOrangeAlpha.png')">
