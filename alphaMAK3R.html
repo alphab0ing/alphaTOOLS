@@ -1,11 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Previous head content remains the same until the settings section -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>alphaMAK3R - alphaT00LS</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
     <style>
-        /* Previous styles remain the same until the settings section */
-
-        /* Updated settings layout */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #1e1e1e;
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+        .sidebar.hidden {
+            transform: translateX(-250px);
+        }
+        .sidebar .logo-image {
+            width: 100%;
+            margin-bottom: 20px;
+            display: block;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #b85b1c;
+            text-align: center;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .sidebar ul li a:hover {
+            background-color: #333;
+        }
+        .sidebar ul li a.active {
+            background-color: #b85b1c;
+            color: #fff;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            flex-grow: 1;
+            width: 80%;
+            box-sizing: border-box;
+            margin-top: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .header .image-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: center;
+        }
+        .header img {
+            max-width: 200px;
+            height: auto;
+        }
+        .header .title-container {
+            text-align: center;
+            flex-grow: 1;
+            padding: 0 20px;
+            white-space: normal;
+        }
+        .header .title {
+            font-size: 32px;
+            color: #ffffff;
+            margin: 0;
+        }
+        .header .subtitle {
+            font-size: 14px;
+            color: #ccc;
+        }
+        .section {
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            font-size: 24px;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+        .section .medium-text {
+            font-size: 16px;
+            color: #ddd;
+            margin-bottom: 10px;
+        }
+        .section .small-text {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+        .section .input-group {
+            margin-bottom: 15px;
+        }
+        .section input[type="text"],
+        .section input[type="number"],
+        .section select {
+            padding: 8px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: #444;
+            color: #fff;
+            width: 100%;
+            max-width: 200px;
+        }
+        .section button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #b85b1c;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .section button:hover {
+            background-color: #a34f19;
+        }
+        .section .status {
+            margin-top: 10px;
+            color: #ffcc00;
+        }
+        .wallet-connect {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+        }
+        .wallet-connect img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            transition: transform 0.2s;
+        }
+        .wallet-connect img:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+        .wallet-connect button {
+            background-color: #b85b1c;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .wallet-connect button:hover {
+            background-color: #a34f19;
+        }
+        .wallet-status {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            color: #fff;
+        }
+        .contact-links {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+        .contact-links a img {
+            width: 40px;
+            height: 40px;
+            transition: transform 0.2s;
+        }
+        .contact-links a img:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #b85b1c;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 1000;
+            border-radius: 5px;
+        }
+        .menu-toggle:hover {
+            background-color: #a34f19;
+        }
+        .button-row {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            gap: 20px;
+        }
         .settings-form {
             display: flex;
             flex-direction: column;
@@ -62,83 +290,103 @@
             gap: 20px;
             margin-top: 15px;
         }
-
-        /* Rest of your existing styles remain the same */
     </style>
 </head>
 <body>
-    <!-- Previous body content remains the same until the settings section -->
-
-    <div class="section">
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="wallet-connect">
+        <img src="/images/settings.png" alt="Settings" onload="console.log('Loaded: settings.png')" onerror="console.log('Failed to load settings.png')">
+        <button onclick="connectWallet()">Connect Wallet</button>
+        <div id="wallet-status" class="wallet-status"></div>
+    </div>
+    <div class="sidebar" id="sidebar">
+        <img src="/images/littleOrangeAlpha.png" alt="alphaT00LS Logo" class="logo-image" onload="console.log('Loaded: littleOrangeAlpha.png')" onerror="console.log('Failed to load littleOrangeAlpha.png')">
+        <div class="logo">alphaT00LS</div>
+        <ul>
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="/askalphaai.html">Ask AlphaAI</a></li>
+            <li><a href="/alphaMAK3R.html">alphaMAK3R</a></li>
+            <li><a href="/pumpfun-toolkit.html">Pump.FUN Tool-Kit</a></li>
+            <li><a href="/chainmail.html">ChainMail</a></li>
+            <li><a href="/alpharaider.html">alphaRAIDER</a></li>
+            <li><a href="/alphatunes.html">alphaTUNES</a></li>
+            <li><a href="/whale-enforcer.html">Whale Enforcer</a></li>
+            <li><a href="/news.html">News</a></li>
+            <li><a href="/roadmap.html">Roadmap</a></li>
+            <li><a href="/aboutus.html">About Us</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <div class="image-row">
+                <img src="/images/bunnyAlpha.png" alt="Bunny Alpha" onload="console.log('Loaded: bunnyAlpha.png')" onerror="console.log('Failed to load bunnyAlpha.png')">
+                <div class="title-container">
+                    <h1>alphaMAK3R</h1>
+                    <p class="small-text">The best Volume Bot & Market Maker for Pump.fun / Solana there is!! alphaMAK3R uses warm wallets with trading history to boost your token's volume. Adjust settings below and start anytime—pause, cancel, or recover funds as needed.</p>
+                </div>
+                <img src="/images/littleAlphaBro.png" alt="Baby Alpha" onload="console.log('Loaded: littleAlphaBro.png')" onerror="console.log('Failed to load littleAlphaBro.png')">
+            </div>
+        </div>
+        
+        <div class="section">
         <h2>Settings</h2>
         
-        <div class="settings-form">
-            <!-- Line 1: Token CA (full width) -->
-            <div class="settings-group">
-                <div class="settings-input">
-                    <label class="settings-label">Token CA:</label>
-                    <input type="text" id="tokenCA" placeholder="Enter Token CA" oninput="updateTokenInfo()">
-                </div>
+        <div class="settings-container">
+            <!-- Token CA -->
+            <div class="settings-input">
+                <label class="settings-label">Token CA:</label>
+                <input type="text" id="tokenCA" placeholder="Enter Token CA" oninput="updateTokenInfo()">
+                <div id="tokenInfo" class="settings-description"></div>
             </div>
 
-            <!-- Line 2: Makers/Loops and Buy Amount side by side -->
+            <!-- Makers/Loops and Buy Amount side by side -->
             <div class="settings-row">
                 <div class="settings-group">
                     <div class="settings-input">
                         <label class="settings-label">Makers / Loops:</label>
                         <input type="number" id="numMakers" min="1" value="1" oninput="updateSettings()">
-                        <div class="settings-description">The number of makers you have will be the number of wallets that will be buying and selling within your chosen buy-cycle window.</div>
+                        <div class="settings-description">The number of makers you have will be the number of wallets that will be buying and selling within your chosen buy cycle duration.</div>
                     </div>
                 </div>
                 <div class="settings-group">
                     <div class="settings-input">
                         <label class="settings-label">Buy Amount (SOL):</label>
                         <input type="number" id="buyAmount" step="0.001" value="0.05" oninput="updateSettings()">
-                        <div class="settings-description">The volume maker will be buying and selling random amounts that are +/- your selected buy amount.</div>
+                        <div class="settings-description">The volume maker will be buying and selling random amounts ± your set buy amount.</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Line 3: Buy Cycle -->
-            <div class="settings-group">
-                <div class="settings-input">
-                    <label class="settings-label">Buy Cycle</label>
-                    <div class="settings-description">Your Buy Cycle adjusts how organic the buys and sells will look, how quickly they are happening and it will directly impact how long your bot will run overall.</div>
-                </div>
-            </div>
-
-            <!-- Line 4: Buy Cycle Min/Max -->
-            <div class="settings-row">
-                <div class="settings-group">
-                    <div class="settings-input">
-                        <label class="settings-label">Buy Cycle Min (s):</label>
+            <!-- Buy Cycle -->
+            <div class="settings-input">
+                <label class="settings-label">Buy Cycle</label>
+                <div class="settings-description">Adjusting the buy cycle will change how fast your volume is generated, how organic the buys and sells look on your chart and how long the bot will run overall.</div>
+                
+                <div class="settings-row" style="margin-top: 10px;">
+                    <div class="settings-group">
+                        <label class="settings-label">Min (s):</label>
                         <input type="number" id="buyCycleMin" min="5" value="30" oninput="updateSettings()">
                     </div>
-                </div>
-                <div class="settings-group">
-                    <div class="settings-input">
-                        <label class="settings-label">Buy Cycle Max (s):</label>
+                    <div class="settings-group">
+                        <label class="settings-label">Max (s):</label>
                         <input type="number" id="buyCycleMax" min="10" value="40" oninput="updateSettings()">
                     </div>
                 </div>
             </div>
 
             <!-- Boost Holders Section -->
-            <div class="settings-group">
-                <div class="settings-input">
-                    <label class="settings-label">Boost Holders</label>
-                    <div class="settings-description">Automatically create new wallet addresses and complete purchases, increasing trading activity and the number of token holders. Real trades help optimize on-chain data, enhancing the project's competitiveness in the market and making it stand out with ease!</div>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="enableHolders" onchange="toggleHolderFields()">
-                            Enable Boost Holders?
-                        </label>
-                    </div>
+            <div class="settings-input">
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="enableHolders" onchange="toggleHolderFields()">
+                        Enable Boost Holders?
+                    </label>
                 </div>
-
-                <!-- Holder fields (appear when enabled) - Now aligned to left -->
+                <div class="settings-description">Automatically create new wallet addresses and complete purchases, increasing trading activity and the number of token holders. Real trades help optimize on-chain data, enhancing the project's competitiveness in the market and making it stand out!!</div>
+                
+                <!-- Holder fields (appear when enabled) -->
                 <div id="holderFields">
-                    <div class="holder-grid">
+                    <div class="holder-inputs">
                         <div class="settings-input">
                             <label class="settings-label">Qty. New Holders:</label>
                             <input type="number" id="numHolders" min="1" value="0" oninput="updateSettings()">
@@ -147,34 +395,29 @@
                         <div class="settings-input">
                             <label class="settings-label">Buy Amount (SOL):</label>
                             <input type="number" id="holderFundingAmount" step="0.001" value="0" oninput="updateSettings()" disabled>
-                            <div class="settings-description">SOL Distributed to your new holders will be funded in such a way that they should not show up as bundled on a bump map.</div>
                         </div>
                         
                         <div class="settings-input">
                             <label class="settings-label">Balance Fluctuation (%):</label>
                             <input type="number" id="balanceFluctuation" step="1" value="10" oninput="updateSettings()" disabled>
-                            <div class="settings-description">SOL is randomly dispersed between all new holder wallets, provide a max percentage between highest/lowest balance.</div>
                         </div>
                     </div>
-
-                    <div class="settings-input">
+                    
+                    <div class="settings-description" style="margin-top: 10px;">
+                        SOL Distributed to your new holders will be funded in such a way that they should not show up as bundled on a bump map.
+                        SOL is randomly dispersed between all new holder wallets, provide a max percentage between highest/lowest balance.
+                    </div>
+                    
+                    <div class="settings-input" style="margin-top: 15px;">
                         <label class="settings-label">Buy-In Strategy</label>
                         <div class="settings-description">There is a number of ways new holders can buy in, each method has its own benefits. Which method would you like to use?</div>
                         
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="radio" name="buyStrategy" value="smart" onchange="updateSettings()">
-                                Smart Buy-In
-                            </label>
-                            <div class="settings-description" style="margin-left: 20px;">Your holders will buy in as other holders make sales on the chart your holder pool will buy in with one or more wallets right after a sell to counteract the sale.</div>
-                        </div>
-                        
-                        <div class="checkbox-group">
+                        <div class="checkbox-group" style="margin-top: 10px;">
                             <label class="checkbox-label">
                                 <input type="radio" name="buyStrategy" value="organic" onchange="updateSettings()">
                                 Organic Buy-In
                             </label>
-                            <div class="settings-description" style="margin-left: 20px;">Holders buy in at random intervals to appear most organic slowly increasing frequency as the token market cap rises. This is the most organic way to buy-in.</div>
+                            <div class="settings-description" style="margin-left: 20px;">Buys holders at random intervals for an organic look, speeding up with rising market cap.</div>
                         </div>
                         
                         <div class="checkbox-group">
@@ -182,16 +425,24 @@
                                 <input type="radio" name="buyStrategy" value="rapid" onchange="updateSettings()">
                                 Rapid Buy-In
                             </label>
-                            <div class="settings-description" style="margin-left: 20px;">Buys in from all holders very quickly; the benefit to this is that you will get a nice green candle on your chart and you'll be able to get your position early on.</div>
+                            <div class="settings-description" style="margin-left: 20px;">Buys holders quickly to spike volume and secure early holder positions.</div>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="buyStrategy" value="smart" onchange="updateSettings()">
+                                Smart Buy-In
+                            </label>
+                            <div class="settings-description" style="margin-left: 20px;">Buys when sales occur outside alphaMAK3R, ensuring organic growth and red candle buys.</div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="settings-buttons">
-            <button onclick="saveSettings()">SAVE</button>
-            <button onclick="clearSettings()">CLEAR</button>
+            
+            <div class="settings-buttons">
+                <button onclick="saveSettings()">Save</button>
+                <button onclick="clearSettings()">Clear</button>
+            </div>
         </div>
     </div>
         
