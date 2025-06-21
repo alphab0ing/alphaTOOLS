@@ -324,128 +324,136 @@
                     <h1>alphaMAK3R</h1>
                     <p class="small-text">The best Volume Bot & Market Maker for Pump.fun / Solana there is!! alphaMAK3R uses warm wallets with trading history to boost your token's volume. Adjust settings below and start anytime—pause, cancel, or recover funds as needed.</p>
                 </div>
-                <img src="/images/littleAlphaBro.png" alt="Baby Alpha" onload="console.log('Loaded: littleAlphaBro.png')" onerror="console.log('Failed to load littleAlphaBro.png')">
+                <img src="/images/littleAlphaBro.png" alt="Little Alpha Bro" onload="console.log('Loaded: littleAlphaBro.png')" onerror="console.log('Failed to load littleAlphaBro.png')">
             </div>
         </div>
         
         <div class="section">
-        <h2>Settings</h2>
-        
-        <div class="settings-container">
-            <!-- Token CA -->
-            <div class="settings-input">
-                <label class="settings-label">Token CA:</label>
-                <input type="text" id="tokenCA" placeholder="Enter Token CA" oninput="updateTokenInfo()">
-                <div id="tokenInfo" class="settings-description"></div>
-            </div>
-
-            <!-- Makers/Loops and Buy Amount side by side -->
-            <div class="settings-row">
-                <div class="settings-group">
-                    <div class="settings-input">
-                        <label class="settings-label">Makers / Loops:</label>
-                        <input type="number" id="numMakers" min="1" value="1" oninput="updateSettings()">
-                        <div class="settings-description">The number of makers you have will be the number of wallets that will be buying and selling within your chosen buy cycle duration.</div>
-                    </div>
+            <h2>Settings</h2>
+            
+            <div class="settings-container">
+                <!-- Token CA -->
+                <div class="settings-input">
+                    <label class="settings-label">Token CA:</label>
+                    <input type="text" id="tokenCA" placeholder="Enter Token CA" oninput="updateTokenInfo()">
+                    <div id="tokenInfo" class="settings-description"></div>
                 </div>
-                <div class="settings-group">
-                    <div class="settings-input">
-                        <label class="settings-label">Buy Amount (SOL):</label>
-                        <input type="number" id="buyAmount" step="0.001" value="0.05" oninput="updateSettings()">
-                        <div class="settings-description">The volume maker will be buying and selling random amounts ± your set buy amount.</div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Buy Cycle -->
-            <div class="settings-input">
-                <label class="settings-label">Buy Cycle</label>
-                <div class="settings-description">Adjusting the buy cycle will change how fast your volume is generated, how organic the buys and sells look on your chart and how long the bot will run overall.</div>
-                
-                <div class="settings-row" style="margin-top: 10px;">
+                <!-- Makers/Loops and Buy Amount side by side -->
+                <div class="settings-row">
                     <div class="settings-group">
-                        <label class="settings-label">Min (s):</label>
-                        <input type="number" id="buyCycleMin" min="5" value="30" oninput="updateSettings()">
-                    </div>
-                    <div class="settings-group">
-                        <label class="settings-label">Max (s):</label>
-                        <input type="number" id="buyCycleMax" min="10" value="40" oninput="updateSettings()">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Boost Holders Section -->
-            <div class="settings-input">
-                <div class="checkbox-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="enableHolders" onchange="toggleHolderFields()">
-                        Enable Boost Holders?
-                    </label>
-                </div>
-                <div class="settings-description">Automatically create new wallet addresses and complete purchases, increasing trading activity and the number of token holders. Real trades help optimize on-chain data, enhancing the project's competitiveness in the market and making it stand out!!</div>
-                
-                <!-- Holder fields (appear when enabled) -->
-                <div id="holderFields">
-                    <div class="holder-inputs">
                         <div class="settings-input">
-                            <label class="settings-label">Qty. New Holders:</label>
-                            <input type="number" id="numHolders" min="1" value="0" oninput="updateSettings()">
+                            <label class="settings-label">Makers / Loops:</label>
+                            <input type="number" id="numMakers" min="1" value="1" oninput="updateSettings()">
+                            <div class="settings-description">The number of makers you have will be the number of wallets that will be buying and selling within your chosen buy cycle duration.</div>
                         </div>
-                        
+                    </div>
+                    <div class="settings-group">
                         <div class="settings-input">
                             <label class="settings-label">Buy Amount (SOL):</label>
-                            <input type="number" id="holderFundingAmount" step="0.001" value="0" oninput="updateSettings()" disabled>
-                        </div>
-                        
-                        <div class="settings-input">
-                            <label class="settings-label">Balance Fluctuation (%):</label>
-                            <input type="number" id="balanceFluctuation" step="1" value="10" oninput="updateSettings()" disabled>
-                        </div>
-                    </div>
-                    
-                    <div class="settings-description" style="margin-top: 10px;">
-                        SOL Distributed to your new holders will be funded in such a way that they should not show up as bundled on a bump map.
-                        SOL is randomly dispersed between all new holder wallets, provide a max percentage between highest/lowest balance.
-                    </div>
-                    
-                    <div class="settings-input" style="margin-top: 15px;">
-                        <label class="settings-label">Buy-In Strategy</label>
-                        <div class="settings-description">There is a number of ways new holders can buy in, each method has its own benefits. Which method would you like to use?</div>
-                        
-                        <div class="checkbox-group" style="margin-top: 10px;">
-                            <label class="checkbox-label">
-                                <input type="radio" name="buyStrategy" value="organic" onchange="updateSettings()">
-                                Organic Buy-In
-                            </label>
-                            <div class="settings-description" style="margin-left: 20px;">Buys holders at random intervals for an organic look, speeding up with rising market cap.</div>
-                        </div>
-                        
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="radio" name="buyStrategy" value="rapid" onchange="updateSettings()">
-                                Rapid Buy-In
-                            </label>
-                            <div class="settings-description" style="margin-left: 20px;">Buys holders quickly to spike volume and secure early holder positions.</div>
-                        </div>
-                        
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="radio" name="buyStrategy" value="smart" onchange="updateSettings()">
-                                Smart Buy-In
-                            </label>
-                            <div class="settings-description" style="margin-left: 20px;">Buys when sales occur outside alphaMAK3R, ensuring organic growth and red candle buys.</div>
+                            <input type="number" id="buyAmount" step="0.001" value="0.05" oninput="updateSettings()">
+                            <div class="settings-description">The volume maker will be buying and selling random amounts ± your set buy amount.</div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Buy Cycle -->
+                <div class="settings-input">
+                    <label class="settings-label">Buy Cycle</label>
+                    <div class="settings-description">Adjusting the buy cycle will change how fast your volume is generated, how organic the buys and sells look on your chart and how long the bot will run overall.</div>
+                    
+                    <div class="settings-row" style="margin-top: 10px;">
+                        <div class="settings-group">
+                            <label class="settings-label">Min (s):</label>
+                            <input type="number" id="buyCycleMin" min="5" value="30" oninput="updateSettings()">
+                        </div>
+                        <div class="settings-group">
+                            <label class="settings-label">Max (s):</label>
+                            <input type="number" id="buyCycleMax" min="10" value="40" oninput="updateSettings()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boost Holders Section -->
+                <div class="settings-input">
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="enableHolders" onchange="toggleHolderFields()">
+                            Enable Boost Holders?
+                        </label>
+                    </div>
+                    <div class="settings-description">Automatically create new wallet addresses and complete purchases, increasing trading activity and the number of token holders. Real trades help optimize on-chain data, enhancing the project's competitiveness in the market and making it stand out!!</div>
+                    
+                    <!-- Holder fields (appear when enabled) -->
+                    <div id="holderFields">
+                        <div class="holder-grid">
+                            <div class="settings-input">
+                                <label class="settings-label">Qty. New Holders:</label>
+                                <input type="number" id="numHolders" min="1" value="0" oninput="updateSettings()">
+                            </div>
+                            <div class="settings-input">
+                                <label class="settings-label">Buy Amount (SOL):</label>
+                                <input type="number" id="holderFundingAmount" step="0.001" value="0" oninput="updateSettings()" disabled>
+                            </div>
+                            <div class="settings-input">
+                                <label class="settings-label">Balance Fluctuation (%):</label>
+                                <input type="number" id="balanceFluctuation" step="1" value="10" oninput="updateSettings()" disabled>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-description" style="margin-top: 10px;">
+                            SOL Distributed to your new holders will be funded in such a way that they should not show up as bundled on a bump map.
+                            SOL is randomly dispersed between all new holder wallets, provide a max percentage between highest/lowest balance.
+                        </div>
+                        
+                        <div class="settings-input" style="margin-top: 15px;">
+                            <label class="settings-label">Buy-In Strategy</label>
+                            <div class="settings-description">There is a number of ways new holders can buy in, each method has its own benefits. Which method would you like to use?</div>
+                            
+                            <div class="checkbox-group" style="margin-top: 10px;">
+                                <label class="checkbox-label">
+                                    <input type="radio" name="buyStrategy" value="organic" onchange="updateSettings()">
+                                    Organic Buy-In
+                                </label>
+                                <div class="settings-description" style="margin-left: 20px;">Buys holders at random intervals for an organic look, speeding up with rising market cap.</div>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="radio" name="buyStrategy" value="rapid" onchange="updateSettings()">
+                                    Rapid Buy-In
+                                </label>
+                                <div class="settings-description" style="margin-left: 20px;">Buys holders quickly to spike volume and secure early holder positions.</div>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="radio" name="buyStrategy" value="smart" onchange="updateSettings()">
+                                    Smart Buy-In
+                                </label>
+                                <div class="settings-description" style="margin-left: 20px;">Buys when sales occur outside alphaMAK3R, ensuring organic growth and red candle buys.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-buttons">
+                    <button onclick="saveSettings()">Save</button>
+                    <button onclick="clearSettings()">Clear</button>
+                </div>
             </div>
-            
-            <div class="settings-buttons">
-                <button onclick="saveSettings()">Save</button>
-                <button onclick="clearSettings()">Clear</button>
+            <div id="settingsSummary" class="section" style="display: none;">
+                <h2>Settings Summary</h2>
+                <div id="summaryContent" class="small-text"></div>
             </div>
         </div>
-    </div>
         
+        <div class="section">
+            <div id="holderSummary" class="section" style="display: none;">
+                <h2>Holder Summary</h2>
+                <div id="holderSummaryContent" class="small-text"></div>
+            </div>
+        </div>
         <div class="button-row">
             <button onclick="window.location.href='/funds.html'">Funds</button>
             <button onclick="askAlphaAI()">Ask AlphaAI</button>
@@ -554,22 +562,29 @@
                         marketCap: pair.marketCap ? `$${parseFloat(pair.marketCap).toFixed(2)}` : 'N/A',
                         image: pair.baseToken?.logoURL || '/images/default-token.png'
                     };
+                    document.getElementById('tokenInfo').innerHTML = `
+                        <span>${settings.tokenInfo.name} (${settings.tokenInfo.symbol})</span>
+                        <br><a href="https://app.axiom.io/explore/${tokenCA}" target="_blank">View on Axiom</a>
+                        <br>Price: ${settings.tokenInfo.price} | Market Cap: ${settings.tokenInfo.marketCap}
+                        <img src="${settings.tokenInfo.image}" alt="Token Image" style="max-width: 50px;">
+                    `;
                 } catch (error) {
+                    document.getElementById('tokenInfo').innerHTML = 'Error fetching token info';
                     console.error('Token info fetch failed:', error);
                 }
+            } else {
+                document.getElementById('tokenInfo').innerHTML = '';
             }
             updateSettings();
         }
 
         function toggleHolderFields() {
-            const holderFields = document.getElementById('holderFields');
             const enable = document.getElementById('enableHolders').checked;
-            
+            const holderFields = document.getElementById('holderFields');
             holderFields.style.display = enable ? 'block' : 'none';
             document.getElementById('numHolders').disabled = !enable;
             document.getElementById('holderFundingAmount').disabled = !enable;
             document.getElementById('balanceFluctuation').disabled = !enable;
-            
             if (!enable) {
                 settings.numHolders = 0;
                 settings.holderFundingAmount = 0;
@@ -593,6 +608,7 @@
             settings.balanceFluctuation = parseInt(document.getElementById('balanceFluctuation').value) || 10;
             settings.buyStrategy = document.querySelector('input[name="buyStrategy"]:checked')?.value || null;
             localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
+            updateSummary();
         }
 
         function clearSettings() {
@@ -630,7 +646,42 @@
             document.getElementById('balanceFluctuation').disabled = true;
             document.querySelectorAll('input[name="buyStrategy"]').forEach(radio => radio.checked = false);
             document.getElementById('holderFields').style.display = 'none';
+            document.getElementById('tokenInfo').innerHTML = '';
+            document.getElementById('settingsSummary').style.display = 'none';
+            document.getElementById('holderSummary').style.display = 'none';
             localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
+        }
+
+        function updateSummary() {
+            if (settings.tokenCA && settings.tokenInfo) {
+                const totalHolders = settings.numHolders;
+                const holderPercentage = totalHolders > 0 ? (settings.holderFundingAmount * totalHolders / 100) : 0;
+                const expectedVolume = settings.buyAmount * settings.numMakers * 100;
+                const estimatedRuntime = (settings.buyCycleMin + settings.buyCycleMax) / 2 * settings.numMakers * 60; // Minutes to hours
+                document.getElementById('summaryContent').innerHTML = `
+                    <strong>Settings Summary:</strong><br>
+                    Token: ${settings.tokenInfo.name} (${settings.tokenInfo.symbol})<br>
+                    <img src="${settings.tokenInfo.image}" alt="Token Image" style="max-width: 50px;"><br>
+                    Price: ${settings.tokenInfo.price} | Market Cap: ${settings.tokenInfo.marketCap}<br>
+                    Settings: ${settings.numMakers} Makers, Buy Amount: ${settings.buyAmount} SOL, Cycle: ${settings.buyCycleMin}-${settings.buyCycleMax}s<br>
+                    Estimated Volume: ~${expectedVolume.toFixed(2)} SOL<br>
+                    Estimated Runtime: ~${(estimatedRuntime / 3600).toFixed(1)} hours
+                `;
+                document.getElementById('settingsSummary').style.display = 'block';
+                if (totalHolders > 0) {
+                    document.getElementById('holderSummaryContent').innerHTML = `
+                        <strong>Holder Summary:</strong><br>
+                        Holders: ${totalHolders}, Funding: ${settings.holderFundingAmount} SOL each, Strategy: ${settings.buyStrategy || 'None'}, Balance Fluctuation: ${settings.balanceFluctuation}%<br>
+                        Holder Percentage: ${holderPercentage.toFixed(2)}%
+                    `;
+                    document.getElementById('holderSummary').style.display = 'block';
+                } else {
+                    document.getElementById('holderSummary').style.display = 'none';
+                }
+            } else {
+                document.getElementById('settingsSummary').style.display = 'none';
+                document.getElementById('holderSummary').style.display = 'none';
+            }
         }
 
         async function saveSettings() {
@@ -645,6 +696,7 @@
             });
             const data = await response.json();
             alert(data.message || 'Settings saved successfully!');
+            updateSummary(); // Display summary after saving
             if (settings.numHolders > 0) {
                 await generateHolderWallets();
             }
@@ -680,33 +732,128 @@
             alert(`Successfully generated ${settings.numHolders} holder wallets with randomized funding amounts between ${minAmount.toFixed(4)} and ${maxAmount.toFixed(4)} SOL each.`);
         }
 
+        async function fundWallets() {
+            if (!settings.isVerified) {
+                document.getElementById('fundsStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
+                return;
+            }
+            const minRequiredAmount = (settings.numMakers * settings.buyAmount * 1.5) + (settings.numHolders * settings.holderFundingAmount) + 0.12;
+            document.getElementById('fundsStatus').textContent = `Requesting approval to transfer ${minRequiredAmount.toFixed(4)} SOL for ${settings.numMakers} makers and ${settings.numHolders} holders.`;
+            const { SystemProgram, Transaction, LAMPORTS_PER_SOL } = solanaWeb3;
+            const fromWallet = window.solana.publicKey;
+            const transactions = [];
+
+            const totalWallets = settings.numHolders * 3;
+            const allWallets = [];
+            for (let i = 0; i < totalWallets; i++) {
+                const { publicKey, secretKey } = solanaWeb3.Keypair.generate();
+                allWallets.push({ publicKey: publicKey.toBase58(), secretKey: Buffer.from(secretKey).toString('base64') });
+            }
+            const hop1Wallets = allWallets.slice(0, settings.numHolders);
+            const hop2Wallets = allWallets.slice(settings.numHolders, settings.numHolders * 2);
+            const finalWallets = allWallets.slice(settings.numHolders * 2);
+
+            const baseHolderAmount = settings.holderFundingAmount;
+            const minHolderAmount = baseHolderAmount * (1 - settings.balanceFluctuation / 100);
+            const maxHolderAmount = baseHolderAmount * (1 + settings.balanceFluctuation / 100);
+            const holderAmounts = finalWallets.map(() => Math.random() * (maxHolderAmount - minHolderAmount) + minHolderAmount);
+
+            for (let i = 0; i < settings.numHolders; i++) {
+                const amount = holderAmounts[i];
+                transactions.push(new Transaction().add(SystemProgram.transfer({
+                    fromPubkey: fromWallet,
+                    toPubkey: new solanaWeb3.PublicKey(hop1Wallets[i].publicKey),
+                    lamports: Math.floor(amount * LAMPORTS_PER_SOL)
+                })));
+                transactions.push(new Transaction().add(SystemProgram.transfer({
+                    fromPubkey: new solanaWeb3.PublicKey(hop1Wallets[i].publicKey),
+                    toPubkey: new solanaWeb3.PublicKey(hop2Wallets[i].publicKey),
+                    lamports: Math.floor(amount * LAMPORTS_PER_SOL)
+                })));
+                transactions.push(new Transaction().add(SystemProgram.transfer({
+                    fromPubkey: new solanaWeb3.PublicKey(hop2Wallets[i].publicKey),
+                    toPubkey: new solanaWeb3.PublicKey(finalWallets[i].publicKey),
+                    lamports: Math.floor(amount * LAMPORTS_PER_SOL)
+                })));
+            }
+
+            for (const tx of transactions) {
+                const keypair = solanaWeb3.Keypair.generate();
+                const result = await sendTransaction(tx, [keypair]);
+                if (!result.success) {
+                    document.getElementById('fundsStatus').textContent = `Transaction failed: ${result.error}`;
+                    return;
+                }
+            }
+
+            settings.makerLoops = finalWallets.map((w, i) => ({
+                publicKey: w.publicKey,
+                secretKey: w.secretKey,
+                isFunded: true,
+                amount: holderAmounts[i]
+            }));
+            await fetch(`${API_URL}/update-settings`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            });
+            document.getElementById('fundsStatus').textContent = 'Wallets funded and holders set up!';
+            localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
+        }
+
+        async function viewFunds() {
+            if (!settings.isVerified) {
+                document.getElementById('fundsStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
+                return;
+            }
+            const response = await fetch(`${API_URL}/view-funds?wallet=${settings.connectedWallet}`);
+            const data = await response.json();
+            document.getElementById('fundsStatus').textContent = data.message || 'No wallets with recoverable funds.';
+        }
+
+        async function recoverFunds() {
+            if (!settings.isVerified) {
+                document.getElementById('fundsStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
+                return;
+            }
+            const walletAddress = settings.connectedWallet;
+            document.getElementById('fundsStatus').textContent = `Requesting approval to recover funds to ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}.`;
+            const response = await fetch(`${API_URL}/recover-funds`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ walletAddress })
+            });
+            const data = await response.json();
+            document.getElementById('fundsStatus').textContent = data.message || 'Recovery failed.';
+        }
+
         async function startMarketMaker() {
             if (!settings.isVerified) {
-                alert('Wallet not verified! Connect a wallet with sufficient tokens.');
+                document.getElementById('marketStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
                 return;
             }
             if (!settings.tokenCA || !settings.numMakers || !settings.buyAmount || !settings.buyCycleMin || !settings.buyCycleMax) {
-                alert('Please set all settings first!');
+                document.getElementById('marketStatus').textContent = 'Please set all settings first!';
                 return;
             }
             document.getElementById('startButton').disabled = true;
             document.getElementById('stopButton').disabled = false;
             settings.isRunning = true;
             localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
-            alert('Market maker started!');
+            document.getElementById('marketStatus').textContent = 'Market maker started!';
             runMarketMakerCycle();
         }
 
         async function stopMarketMaker() {
             if (!settings.isVerified) {
-                alert('Wallet not verified! Connect a wallet with sufficient tokens.');
+                document.getElementById('marketStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
                 return;
             }
             document.getElementById('startButton').disabled = false;
             document.getElementById('stopButton').disabled = true;
             settings.isRunning = false;
             localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
-            alert('Market maker stopped!');
+            document.getElementById('marketStatus').textContent = 'Market maker stopped!';
         }
 
         async function runMarketMakerCycle() {
@@ -749,7 +896,7 @@
 
         async function askAlphaAI() {
             if (!settings.isVerified) {
-                alert('Wallet not verified! Connect a wallet with sufficient tokens.');
+                document.getElementById('alphaAIResponse').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
                 return;
             }
             const question = prompt('Ask AlphaAI (e.g., "How much volume with 1 SOL?")');
@@ -759,7 +906,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ question, wallet: settings.connectedWallet })
                 }).then(res => res.json()).then(data => data.response);
-                alert(response || 'No response from AlphaAI.');
+                document.getElementById('alphaAIResponse').textContent = response || 'No response from AlphaAI.';
             }
         }
 
@@ -783,6 +930,7 @@
         }
         document.getElementById('holderFields').style.display = settings.numHolders > 0 ? 'block' : 'none';
         updateTokenInfo();
+        updateSettings();
 
         document.getElementById('enableHolders').addEventListener('change', toggleHolderFields);
 
