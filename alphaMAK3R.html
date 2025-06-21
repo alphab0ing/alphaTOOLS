@@ -21,7 +21,6 @@
             overflow-x: hidden;
         }
         .sidebar {
-            top: 0;
             width: 250px;
             height: 100vh;
             background-color: #1e1e1e;
@@ -70,18 +69,17 @@
         .top-fixed-area {
             position: fixed;
             top: 0;
-            left: 250px; /* Start after sidebar */
-            right: 0; /* Extend to right edge */
-            width: calc(100% - 250px); /* Full width minus sidebar */
-            background-color: #2a2a2a; /* Solid background */
-            z-index: 1001; /* Above content */
+            left: 250px;
+            width: 100%;
+            background-color: transparent; /* Make background transparent */
+            z-index: 1000; /* Keep above content but below menu toggle */
             padding: 10px 20px;
             box-sizing: border-box;
             display: flex;
             justify-content: space-between;
             align-items: center;
             height: 60px;
-            border-bottom: none;
+            border-bottom: none; /* Remove the border line */
         }
         .main-content {
             margin-top: 60px; /* Same as top-fixed-area height */
