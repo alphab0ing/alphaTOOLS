@@ -78,7 +78,7 @@
             z-index: 1000;
             padding: 10px 20px;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end; /* Changed to align items to the right */
             align-items: center;
             height: 60px;
         }
@@ -135,7 +135,6 @@
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            position: right;
         }
         .wallet-connect button:hover {
             background-color: #a34f19;
@@ -150,7 +149,7 @@
             min-height: 20px;
             position: absolute;
             top: 100%;
-            left: 0;
+            right: 0; /* Align status to the right */
             width: 100%;
             z-index: 100;
         }
@@ -367,9 +366,6 @@
                 <span id="connectWalletSpinner" class="spinner" style="display: none;"></span>
             </button>
             <div id="wallet-status" class="wallet-status"></div>
-        </div>
-        <div class="news-section">
-            <p>Latest News: Check back for updates on alphaT00LS features!</p>
         </div>
     </div>
     <div class="sidebar" id="sidebar">
