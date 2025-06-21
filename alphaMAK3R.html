@@ -145,6 +145,7 @@
             background-color: #333;
             border-radius: 5px;
             color: #fff;
+            min-height: 20px;
         }
         .header {
             display: flex;
@@ -499,6 +500,8 @@
         </div>
     </div>
     <script>
+        
+document.addEventListener('DOMContentLoaded', function() {
         const API_URL = 'https://157.230.213.252/api';
 
         // Hardcoded .env constants (fetch from API if server-side)
@@ -662,23 +665,38 @@
                 try {
                     await phantom.connect();
                     settings.connectedWallet = phantom.publicKey.toString();
-                    document.getElementById('wallet-status').style.display = 'block';
-                    const tokenBalance = await checkTokenBalance(settings.connectedWallet);
-                    settings.isVerified = tokenBalance >= 1000000;
-                    document.getElementById('wallet-status').textContent = `Connected: ${settings.connectedWallet.slice(0, 6)}...${settings.connectedWallet.slice(-4)}${settings.isVerified ? ' (Verified)' : ' (Not Verified - Need 1,000,000 tokens)'}`;
-                    console.log('Connected to Phantom wallet:', settings.connectedWallet, 'Token Balance:', tokenBalance);
-                    updateSettings();
+                    
+                    // Get the wallet-status element first
+                    const walletStatusElement = document.getElementById('wallet-status');
+                    
+                    if (walletStatusElement) {
+                        walletStatusElement.style.display = 'block';
+                        const tokenBalance = await checkTokenBalance(settings.connectedWallet);
+                        settings.isVerified = tokenBalance >= 1000000;
+                        walletStatusElement.textContent = `Connected: ${settings.connectedWallet.slice(0, 6)}...${settings.connectedWallet.slice(-4)}${settings.isVerified ? ' (Verified)' : ' (Not Verified - Need 1,000,000 tokens)'}`;
+                        console.log('Connected to Phantom wallet:', settings.connectedWallet, 'Token Balance:', tokenBalance);
+                        updateSettings();
+                    } else {
+                        console.error('Wallet status element not found');
+                    }
                 } catch (error) {
-                    document.getElementById('wallet-status').style.display = 'block';
-                    document.getElementById('wallet-status').textContent = `Connection failed: ${error.message}`;
+                    const walletStatusElement = document.getElementById('wallet-status');
+                    if (walletStatusElement) {
+                        walletStatusElement.style.display = 'block';
+                        walletStatusElement.textContent = `Connection failed: ${error.message}`;
+                    }
                     console.error('Phantom connection error:', error);
                 }
             } else {
-                document.getElementById('wallet-status').style.display = 'block';
-                document.getElementById('wallet-status').textContent = 'Please install Phantom wallet extension.';
+                const walletStatusElement = document.getElementById('wallet-status');
+                if (walletStatusElement) {
+                    walletStatusElement.style.display = 'block';
+                    walletStatusElement.textContent = 'Please install Phantom wallet extension.';
+                }
                 alert('Please install the Phantom wallet extension to connect.');
             }
         }
+                
 
         async function checkTokenBalance(walletAddress) {
             const connection = new solanaWeb3.Connection('https://api.mainnet-beta.solana.com', 'confirmed');
@@ -1090,6 +1108,7 @@
         async function delay(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
+    });
     </script>
 </body>
 </html>
