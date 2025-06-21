@@ -73,25 +73,25 @@
             position: fixed;
             top: 0;
             left: 250px;
-            width: 100%;
-            background-color: #2a2a2a !important; /* Make background transparent */
-            z-index: 3000; /* Keep above content but below menu toggle */
+            right: 0; /* Add this to ensure it spans full width */
+            background-color: #2a2a2a !important;
+            z-index: 1000; /* Lower this to be below menu toggle but above content */
             padding: 10px 20px;
-            box-sizing: border-box;
             display: flex;
             justify-content: space-between;
             align-items: center;
             height: 60px;
-            border-bottom: none; /* Remove the border line */
         }
         .main-content {
             margin-left: 250px;
             padding: 30px;
-            margin-top: 70px;
+            margin-top: 70px; /* This should match the height of your top-fixed-area */
             display: flex;
             flex-direction: column;
-            align-items: center; /* This centers child elements horizontally */
-            width: calc(100% - 250px); /* Full width minus sidebar */
+            align-items: center;
+            width: calc(100% - 250px);
+            position: relative; /* Add this */
+            z-index: 1; /* Add this to ensure content stays behind top bar */
         }
         .menu-toggle {
             display: none;
