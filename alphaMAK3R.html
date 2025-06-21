@@ -74,8 +74,8 @@
             top: 0;
             left: 250px;
             width: 100%;
-            background-color: #2a2a2a; /* Make background transparent */
-            z-index: 2000; /* Keep above content but below menu toggle */
+            background-color: #2a2a2a !important; /* Make background transparent */
+            z-index: 3000; /* Keep above content but below menu toggle */
             padding: 10px 20px;
             box-sizing: border-box;
             display: flex;
@@ -94,7 +94,17 @@
             width: calc(100% - 250px); /* Full width minus sidebar */
         }
         .menu-toggle {
-            z-index: 2002; /* Above the top-fixed-area */
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #b85b1c;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 3100; /* Increase to stay above top-fixed-area if needed */
+            border-radius: 5px;
         }
         .news-section {
             flex-grow: 1;
