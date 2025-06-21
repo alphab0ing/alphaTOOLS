@@ -408,6 +408,24 @@
             max-width: 750px;
         }
 
+        #tokenInfo {
+            display: flex;
+            align-items: center;
+            height: 30px;
+            overflow: hidden;
+            max-width: 300px;
+        }
+
+        #tokenInfo div {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #tokenInfo strong {
+            white-space: nowrap;
+        }
+
         .holder-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -466,11 +484,10 @@
                     <label class="settings-label">Token CA:</label>
                     <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
                         <input type="text" id="tokenCA" placeholder="Enter Token CA" oninput="updateTokenInfo()" style="flex: 1; min-width: 300px;">
-                        
-                        </div>
+                        <div id="tokenImageContainer" style="width:30px; height:30px;"></div>
+                        <div id="tokenInfo" style="font-size: 13px; line-height: 1; white-space: nowrap;"></div>
                     </div>
                 </div>
-
                 <!-- Makers/Loops and Buy Amount side by side -->
                 <div class="settings-row">
                     <div class="settings-group">
@@ -665,60 +682,60 @@
         }
 
         async function updateTokenInfo() {
-        const tokenCA = document.getElementById('tokenCA').value.trim();
-        const tokenInfoDiv = document.getElementById('tokenInfo');
-        const tokenImageContainer = document.getElementById('tokenImageContainer');
-        
-        if (!tokenCA) {
-            tokenImageContainer.innerHTML = '';
-            tokenInfoDiv.innerHTML = '<div style="font-size: 13px; color: #aaa;">Token info will appear here</div>';
-            return;
-        }
-
-        // Show loading state
-        tokenImageContainer.innerHTML = '<div class="spinner"></div>';
-        tokenInfoDiv.innerHTML = '<div style="font-size: 13px; color: #aaa;">Loading token data...</div>';
-        
-        try {
-            const response = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${tokenCA}`);
-            const data = await response.json();
-            const pair = data.pairs?.[0] || {};
+            const tokenCA = document.getElementById('tokenCA').value.trim();
+            const tokenInfoDiv = document.getElementById('tokenInfo');
+            const tokenImageContainer = document.getElementById('tokenImageContainer');
             
-            const tokenData = {
-                name: pair.baseToken?.name || 'Unknown Token',
-                symbol: pair.baseToken?.symbol || 'UNKNOWN',
-                price: pair.priceUsd ? `$${parseFloat(pair.priceUsd).toFixed(4)}` : 'N/A',
-                change: pair.priceChange?.h24 ? `${parseFloat(pair.priceChange.h24).toFixed(2)}%` : '0%',
-                image: pair.baseToken?.logoURL || 'https://cryptologos.cc/logos/solana-sol-logo.png'
-            };
+            if (!tokenCA) {
+                tokenImageContainer.innerHTML = '';
+                tokenInfoDiv.innerHTML = '<div style="font-size: 13px; color: #aaa;">Token info</div>';
+                return;
+            }
 
-            // Update the image
-            tokenImageContainer.innerHTML = `
-                <img src="${tokenData.image}" 
-                    onerror="this.src='https://cryptologos.cc/logos/solana-sol-logo.png'" 
-                    style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
-            `;
+            // Show loading state
+            tokenImageContainer.innerHTML = '<div class="spinner"></div>';
+            tokenInfoDiv.innerHTML = '<div style="font-size: 13px; color: #aaa;">Loading...</div>';
+            
+            try {
+                const response = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${tokenCA}`);
+                const data = await response.json();
+                const pair = data.pairs?.[0] || {};
+                
+                const tokenData = {
+                    name: pair.baseToken?.name || 'Unknown',
+                    symbol: pair.baseToken?.symbol || 'UNKNOWN',
+                    price: pair.priceUsd ? `$${parseFloat(pair.priceUsd).toFixed(4)}` : 'N/A',
+                    change: pair.priceChange?.h24 ? `${parseFloat(pair.priceChange.h24).toFixed(2)}%` : '0%',
+                    image: pair.baseToken?.logoURL || 'https://cryptologos.cc/logos/solana-sol-logo.png'
+                };
 
-            // Update the info box
-            tokenInfoDiv.innerHTML = `
-                <div style="font-size: 13px; line-height: 1.4;">
-                    <div><strong>${tokenData.symbol}</strong> • ${tokenData.price}</div>
-                    <div style="color:${tokenData.change.startsWith('-') ? '#ff4d4d' : '#4dff4d'}">
-                        ${tokenData.change}
+                // Update the image
+                tokenImageContainer.innerHTML = `
+                    <img src="${tokenData.image}" 
+                        onerror="this.src='https://cryptologos.cc/logos/solana-sol-logo.png'" 
+                        style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+                `;
+
+                // Update the info box (compact single line)
+                tokenInfoDiv.innerHTML = `
+                    <div>
+                        <strong>${tokenData.symbol}</strong> 
+                        <span>${tokenData.price}</span>
+                        <span style="color:${tokenData.change.startsWith('-') ? '#ff4d4d' : '#4dff4d'}">
+                            ${tokenData.change}
+                        </span>
                     </div>
-                    <div style="font-size:12px; color:#aaa;">${tokenData.name}</div>
-                </div>
-            `;
+                `;
 
-        } catch (error) {
-            tokenImageContainer.innerHTML = `
-                <img src="https://cryptologos.cc/logos/solana-sol-logo.png" 
-                    style="width:30px; height:30px; border-radius:50%;">
-            `;
-            tokenInfoDiv.innerHTML = '<div style="font-size: 13px; color: #ff4d4d;">Error loading token data</div>';
-            console.error('Token info fetch failed:', error);
+            } catch (error) {
+                tokenImageContainer.innerHTML = `
+                    <img src="https://cryptologos.cc/logos/solana-sol-logo.png" 
+                        style="width:30px; height:30px; border-radius:50%;">
+                `;
+                tokenInfoDiv.innerHTML = '<div style="font-size: 13px; color: #ff4d4d;">Error</div>';
+                console.error('Token info fetch failed:', error);
+            }
         }
-    }
 
         function toggleHolderFields() {
             const enable = document.getElementById('enableHolders').checked;
