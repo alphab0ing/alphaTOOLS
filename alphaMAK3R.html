@@ -360,6 +360,7 @@
             display: flex;
             gap: 20px;
             width: 100%;
+            margin-bottom: 20px;
         }
 
         .settings-group {
@@ -484,7 +485,6 @@
                     </div>
                 </div>
 
-                <!-- Buy Cycle -->
                 <div class="settings-input">
                     <label class="settings-label">Buy Cycle</label>
                     <div class="settings-description">Adjusting the buy cycle will change how fast your volume is generated, how organic the buys and sells look on your chart and how long the bot will run overall.</div>
@@ -498,6 +498,11 @@
                             <label class="settings-label">Max (s):</label>
                             <input type="number" id="buyCycleMax" min="10" value="40" oninput="updateSettings()">
                         </div>
+                    </div>
+                    <div class="settings-input" style="margin-top: 10px;">
+                        <label class="settings-label">Fund Amount (SOL):</label>
+                        <input type="number" id="fundAmount" step="0.001" value="0" oninput="updateSettings()">
+                        <div class="settings-description">Enter the total amount of SOL to fund the market maker operations.</div>
                     </div>
                 </div>
 
@@ -606,6 +611,7 @@
             buyAmount: 0.05,
             buyCycleMin: 30,
             buyCycleMax: 40,
+            fundAmount: 0, // New field to track funding amount
             keepMakersEnabled: false,
             keepMakersPercent: 0,
             isRunning: false,
@@ -730,6 +736,7 @@
             settings.buyAmount = parseFloat(document.getElementById('buyAmount').value) || 0.05;
             settings.buyCycleMin = parseInt(document.getElementById('buyCycleMin').value) || 30;
             settings.buyCycleMax = parseInt(document.getElementById('buyCycleMax').value) || 40;
+            settings.fundAmount = parseFloat(document.getElementById('fundAmount').value) || 0; // Add new field
             settings.numHolders = parseInt(document.getElementById('numHolders').value) || 0;
             settings.holderFundingAmount = parseFloat(document.getElementById('holderFundingAmount').value) || 0;
             settings.balanceFluctuation = parseInt(document.getElementById('balanceFluctuation').value) || 10;
@@ -746,6 +753,7 @@
                 buyAmount: 0.05,
                 buyCycleMin: 30,
                 buyCycleMax: 40,
+                fundAmount: 0, // Initialize new field
                 keepMakersEnabled: false,
                 keepMakersPercent: 0,
                 isRunning: false,
@@ -764,6 +772,7 @@
             document.getElementById('buyAmount').value = 0.05;
             document.getElementById('buyCycleMin').value = 30;
             document.getElementById('buyCycleMax').value = 40;
+            document.getElementById('fundAmount').value = 0; // Clear new field
             document.getElementById('enableHolders').checked = false;
             document.getElementById('numHolders').value = 0;
             document.getElementById('holderFundingAmount').value = 0;
@@ -785,12 +794,13 @@
                 const holderPercentage = totalHolders > 0 ? (settings.holderFundingAmount * totalHolders / 100) : 0;
                 const expectedVolume = settings.buyAmount * settings.numMakers * 100;
                 const estimatedRuntime = (settings.buyCycleMin + settings.buyCycleMax) / 2 * settings.numMakers * 60; // Minutes to hours
+                const totalFunded = settings.fundAmount; // Use the new fund amount
                 document.getElementById('summaryContent').innerHTML = `
                     <strong>Settings Summary:</strong><br>
                     Token: ${settings.tokenInfo.name} (${settings.tokenInfo.symbol})<br>
                     <img src="${settings.tokenInfo.image}" alt="Token Image" style="max-width: 50px;"><br>
                     Price: ${settings.tokenInfo.price} | Market Cap: ${settings.tokenInfo.marketCap}<br>
-                    Settings: ${settings.numMakers} Makers, Buy Amount: ${settings.buyAmount} SOL, Cycle: ${settings.buyCycleMin}-${settings.buyCycleMax}s<br>
+                    Settings: ${settings.numMakers} Makers, Buy Amount: ${settings.buyAmount} SOL, Cycle: ${settings.buyCycleMin}-${settings.buyCycleMax}s, Fund Amount: ${totalFunded} SOL<br>
                     Estimated Volume: ~${expectedVolume.toFixed(2)} SOL<br>
                     Estimated Runtime: ~${(estimatedRuntime / 3600).toFixed(1)} hours
                 `;
@@ -864,8 +874,8 @@
                 document.getElementById('fundsStatus').textContent = 'Wallet not verified! Connect a wallet with sufficient tokens.';
                 return;
             }
-            const minRequiredAmount = (settings.numMakers * settings.buyAmount * 1.5) + (settings.numHolders * settings.holderFundingAmount) + 0.12;
-            document.getElementById('fundsStatus').textContent = `Requesting approval to transfer ${minRequiredAmount.toFixed(4)} SOL for ${settings.numMakers} makers and ${settings.numHolders} holders.`;
+            const minRequiredAmount = (settings.numMakers * settings.buyAmount * 1.5) + settings.fundAmount + (settings.numHolders * settings.holderFundingAmount) + 0.12; // Include fundAmount
+            document.getElementById('fundsStatus').textContent = `Requesting approval to transfer ${minRequiredAmount.toFixed(4)} SOL for ${settings.numMakers} makers, ${settings.fundAmount} SOL fund, and ${settings.numHolders} holders.`;
             const { SystemProgram, Transaction, LAMPORTS_PER_SOL } = solanaWeb3;
             const fromWallet = window.solana.publicKey;
             const transactions = [];
