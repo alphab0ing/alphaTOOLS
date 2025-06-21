@@ -71,28 +71,15 @@
             top: 0;
             left: 0;
             width: 100%;
-            background-color: #2a2a2a;
-            z-index: 2000; /* Higher than everything else */
+            background-color: #2a2a2a; /* Match body background */
+            z-index: 1001; /* Above sidebar (z-index: 1000) and other content */
             padding: 10px 20px;
             box-sizing: border-box;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 60px;
-            border-bottom: 1px solid #444;
-        }
-
-        /* Adjust main content to account for fixed header */
-        .main-content {
-            margin-top: 60px; /* Same as top-fixed-area height */
-            margin-left: 250px;
-            padding: 30px;
-            flex-grow: 1;
-            width: 90%;
-            box-sizing: border-box;
-        }
-        .menu-toggle {
-            z-index: 2001; /* Above the top-fixed-area */
+            height: 60px; /* Match the height of wallet-connect and news area */
+            border-bottom: 1px solid #444; /* Optional: Add a subtle separator */
         }
         .news-section {
             flex-grow: 1;
@@ -123,7 +110,7 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .news-section {
+         .news-section {
             flex-grow: 1;
             text-align: center;
             color: #fff;
