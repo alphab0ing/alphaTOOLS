@@ -523,6 +523,13 @@
                     </div>
                 </div>
 
+                <!-- Amount Funding -->
+                <div class="settings-input">
+                    <label class="settings-label">Amount Funding (SOL):</label>
+                    <input type="number" id="totalFunding" step="0.001" value="0.1" oninput="updateSettings()">
+                    <div class="settings-description">How much SOL will you be funding?</div>
+                </div>
+
                 <!-- Boost Holders Section -->
                 <div class="settings-input">
                     <div class="checkbox-group">
@@ -627,7 +634,6 @@
             buyStrategy: null
         };
 
-        // Phantom Wallet Integration
         async function connectWallet() {
             if ("solana" in window) {
                 const phantom = window.solana;
@@ -650,6 +656,47 @@
                 document.getElementById('wallet-status').textContent = 'Please install Phantom wallet extension.';
                 alert('Please install the Phantom wallet extension to connect.');
             }
+        }
+
+        function calculateEstimates() {
+            const deposited = settings.depositedAmount || parseFloat(document.getElementById('totalFunding').value) || 0;
+            const numMakers = settings.numMakers || 1;
+            const buyAmount = settings.buyAmount || 0.05;
+            const cycleMin = settings.buyCycleMin || 30;
+            const cycleMax = settings.buyCycleMax || 40;
+            const numHolders = settings.numHolders || 0;
+            const holderFunding = settings.holderFundingAmount || 0;
+            
+            // Calculate maker allocation (80% of funds go to makers, 20% to holders if enabled)
+            const makerAllocation = numHolders > 0 ? deposited * 0.8 : deposited;
+            const holderAllocation = deposited - makerAllocation;
+            
+            // Maker calculations
+            const avgCycle = (cycleMin + cycleMax) / 2;
+            const tradesPerMaker = Math.floor(makerAllocation / (numMakers * buyAmount * 1.15)); // 1.15 accounts for slippage and failed tx
+            
+            // Holder calculations
+            const holderTrades = numHolders > 0 ? Math.floor(holderAllocation / (holderFunding * 1.1)) : 0;
+            
+            // Totals
+            settings.estimatedVolume = (buyAmount * numMakers * tradesPerMaker * 2) + // Maker buys+sells
+                                    (holderFunding * holderTrades * 1.5);            // Holder buys (1.5x for organic follow-on)
+            
+            settings.estimatedRuntime = (avgCycle * tradesPerMaker) / 60; // in minutes
+            
+            // Adjust runtime based on holders
+            if (numHolders > 0) {
+                const holderRuntime = holderTrades * 2; // 2 minutes per holder trade (organic spacing)
+                settings.estimatedRuntime = Math.max(settings.estimatedRuntime, holderRuntime);
+            }
+            
+            // Minimum runtime of 5 minutes if we have any activity
+            if (deposited > 0) {
+                settings.estimatedRuntime = Math.max(settings.estimatedRuntime, 5);
+            }
+            
+            // Update UI immediately
+            updateSummary();
         }
 
         async function checkTokenBalance(walletAddress) {
@@ -766,7 +813,9 @@
             settings.holderFundingAmount = parseFloat(document.getElementById('holderFundingAmount').value) || 0;
             settings.balanceFluctuation = parseInt(document.getElementById('balanceFluctuation').value) || 10;
             settings.buyStrategy = document.querySelector('input[name="buyStrategy"]:checked')?.value || null;
+            settings.totalFunding = parseFloat(document.getElementById('totalFunding').value) || 0.1;
             localStorage.setItem('alphaMAK3RSettings', JSON.stringify(settings));
+            calculateEstimates();
             updateSummary();
         }
 
