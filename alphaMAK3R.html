@@ -21,6 +21,7 @@
             overflow-x: hidden;
         }
         .sidebar {
+            display: flex;
             width: 250px;
             height: 100vh;
             background-color: #1e1e1e;
@@ -32,12 +33,14 @@
         .sidebar.hidden {
             transform: translateX(-250px);
         }
-        .sidebar .logo-image {
+        .sidebar .logo-image,
+        .sidebar .logo {
             width: 50%;
             margin: 0 auto;
             margin-bottom: 20px;
+            margin-right: auto;
+            margin-left: auto;
             display: block;
-            align-self: center;
         }
         .logo {
             font-size: 24px;
