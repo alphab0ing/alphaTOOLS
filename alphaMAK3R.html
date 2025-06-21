@@ -524,22 +524,23 @@
             <h2>Settings</h2>
             
             <div class="settings-input" style="display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px;">
-                <div style="flex: 1; min-width: 300px;">
-                    <label class="settings-label">Token CA:</label>
-                    <input type="text" id="tokenCA" placeholder="Enter Token CA" oninput="updateTokenInfo()" style="width: 100%;">
-                </div>
-                <div style="flex: 1; min-width: 300px;">
-                    <div id="tokenInfo" style="display: flex; gap: 10px; background: #333; padding: 10px; border-radius: 6px; min-height: 60px; align-items: center;">
-                        <div id="tokenImageContainer" style="min-width: 40px; text-align: center;">
-                            <!-- Image will appear here -->
-                        </div>
-                        <div id="tokenDetails" style="flex: 1; font-size: 13px; line-height: 1.3;">
-                            <!-- Details will appear here -->
-                            <div style="color: #ccc;">Enter token address to load info</div>
-                        </div>
+            <div style="flex: 1; min-width: 300px;">
+                <label class="settings-label">Token CA:</label>
+                <input type="text" id="tokenCA" placeholder="Enter Token CA" oninput="updateTokenInfo()" style="width: 100%;">
+            </div>
+            <div style="flex: 1; min-width: 300px;">
+                <div id="tokenInfo" style="display: flex; gap: 10px; background: #333; padding: 10px; border-radius: 6px; min-height: 60px; align-items: center;">
+                    <div id="tokenImageContainer" style="min-width: 40px; text-align: center;">
+                        <!-- Image will appear here -->
+                    </div>
+                    <div id="tokenDetails" style="flex: 1; font-size: 13px; line-height: 1.3;">
+                        <!-- Details will appear here -->
+                        <div style="color: #ccc;">Enter token address to load info</div>
                     </div>
                 </div>
             </div>
+        </div>
+
                 <!-- Makers/Loops and Buy Amount side by side -->
                 <div class="settings-row">
                     <div class="settings-group">
@@ -753,61 +754,97 @@
             const tokenInfoDiv = document.getElementById('tokenInfo');
             
             if (!tokenCA) {
-                tokenInfoDiv.innerHTML = `
-                    <div id="tokenImageContainer" style="min-width: 30px;"></div>
-                    <div id="tokenDetails" style="font-size: 13px; line-height: 1.3;">
-                        <div style="color: #aaa;">Token info will appear here</div>
-                    </div>
-                `;
+                tokenInfoDiv.innerHTML = '<div style="width:100%; text-align:center; padding:20px; color:#777;">Enter token contract address to load information</div>';
                 return;
             }
 
             // Show loading state
-            tokenInfoDiv.innerHTML = `
-                <div style="width:30px; height:30px; display:flex; align-items:center; justify-content:center;">
-                    <div class="spinner" style="width:15px; height:15px; border-width:2px;"></div>
-                </div>
-                <div style="font-size:13px; color:#aaa;">Loading...</div>
-            `;
+            tokenInfoDiv.innerHTML = '<div style="width:100%; text-align:center; padding:20px;"><div class="spinner"></div> Loading token data...</div>';
             
             try {
                 const response = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${tokenCA}`);
                 const data = await response.json();
                 const pair = data.pairs?.[0] || {};
                 
+                // Extract data with fallbacks
                 const tokenData = {
+                    name: pair.baseToken?.name || 'Unknown Token',
                     symbol: pair.baseToken?.symbol || 'UNKNOWN',
                     image: pair.baseToken?.logoURL || 'https://cryptologos.cc/logos/solana-sol-logo.png',
-                    price: pair.priceUsd ? `$${parseFloat(pair.priceUsd).toFixed(4)}` : 'N/A',
-                    change: pair.priceChange?.h24 ? `${parseFloat(pair.priceChange.h24).toFixed(2)}%` : '0%'
+                    price: pair.priceUsd ? `$${parseFloat(pair.priceUsd).toFixed(6)}` : 'N/A',
+                    marketCap: pair.marketCap ? `$${(pair.marketCap / 1000000).toFixed(2)}M` : 'N/A',
+                    volume24h: pair.volume?.h24 ? `$${(pair.volume.h24 / 1000).toFixed(1)}K` : 'N/A',
+                    liquidity: pair.liquidity?.usd ? `$${(pair.liquidity.usd / 1000).toFixed(1)}K` : 'N/A',
+                    priceChange: pair.priceChange?.h24 ? `${parseFloat(pair.priceChange.h24).toFixed(2)}%` : 'N/A',
+                    pairUrl: pair.url || `https://dexscreener.com/solana/${tokenCA}`
                 };
 
-                // Build the display
-                tokenInfoDiv.innerHTML = `
-                    <div id="tokenImageContainer" style="min-width: 30px;">
-                        <img src="${tokenData.image}" 
-                            onerror="this.src='https://cryptologos.cc/logos/solana-sol-logo.png'" 
-                            style="width:25px; height:25px; border-radius:50%; object-fit:cover;">
-                    </div>
-                    <div id="tokenDetails" style="font-size: 13px; line-height: 1.3;">
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <strong>${tokenData.symbol}</strong>
-                            <span style="color:${tokenData.change.startsWith('-') ? '#ff4d4d' : '#4dff4d'}; font-size:12px;">
-                                ${tokenData.change}
-                            </span>
+                // Build the image container (with error handling)
+                const imgContainer = document.getElementById('tokenImageContainer');
+                imgContainer.innerHTML = '';
+                const img = new Image();
+                img.src = tokenData.image;
+                img.style.maxWidth = '60px';
+                img.style.maxHeight = '60px';
+                img.style.borderRadius = '30px';
+                img.onerror = function() {
+                    this.src = 'https://cryptologos.cc/logos/solana-sol-logo.png';
+                };
+                imgContainer.appendChild(img);
+                imgContainer.innerHTML += `<div style="margin-top:8px;font-weight:bold;">${tokenData.symbol}</div>`;
+
+                // Build the details section
+                const detailsDiv = document.getElementById('tokenDetails');
+                detailsDiv.innerHTML = `
+                    <div style="margin-bottom:8px;"><strong>${tokenData.name}</strong></div>
+                    <div style="font-size:13px;color:#aaa;margin-bottom:10px;">Contract: ${tokenCA.slice(0,6)}...${tokenCA.slice(-4)}</div>
+                    <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                        <div>
+                            <div style="font-size:12px;color:#aaa;">Price</div>
+                            <div style="font-size:16px;">${tokenData.price}</div>
                         </div>
-                        <div style="font-size:12px; color:#ddd;">${tokenData.price}</div>
+                        <div>
+                            <div style="font-size:12px;color:#aaa;">Market Cap</div>
+                            <div style="font-size:16px;">${tokenData.marketCap}</div>
+                        </div>
+                    </div>
+                `;
+
+                // Build the stats section
+                const statsDiv = document.getElementById('tokenStats');
+                statsDiv.innerHTML = `
+                    <div style="margin-bottom:15px;">
+                        <div style="font-size:12px;color:#aaa;">24h Volume</div>
+                        <div style="font-size:16px;">${tokenData.volume24h}</div>
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <div style="font-size:12px;color:#aaa;">Liquidity</div>
+                        <div style="font-size:16px;">${tokenData.liquidity}</div>
+                    </div>
+                    <div>
+                        <div style="font-size:12px;color:#aaa;">24h Change</div>
+                        <div style="font-size:16px;color:${tokenData.priceChange.startsWith('-') ? '#ff4d4d' : '#4dff4d'}">
+                            ${tokenData.priceChange}
+                        </div>
+                    </div>
+                `;
+
+                // Chart placeholder (you would implement real chart here)
+                const chartDiv = document.getElementById('tokenChartPlaceholder');
+                chartDiv.innerHTML = `
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; margin-bottom:5px; color:#aaa;">24h Price Chart</div>
+                        <div style="height:60px; background:#111; border-radius:3px; display:flex; align-items:center; justify-content:center; color:#555;">
+                            Chart would display here
+                        </div>
+                        <a href="${tokenData.pairUrl}" target="_blank" style="display:inline-block; margin-top:5px; font-size:12px; color:#b85b1c;">View on DexScreener</a>
                     </div>
                 `;
 
             } catch (error) {
-                tokenInfoDiv.innerHTML = `
-                    <div id="tokenImageContainer" style="min-width: 30px;">
-                        <img src="https://cryptologos.cc/logos/solana-sol-logo.png" 
-                            style="width:25px; height:25px; border-radius:50%;">
-                    </div>
-                    <div id="tokenDetails" style="font-size: 13px; color:#ff4d4d;">
-                        Error loading data
+                document.getElementById('tokenInfo').innerHTML = `
+                    <div style="width:100%; text-align:center; padding:20px; color:#ff4d4d;">
+                        Error loading token data. Please check the contract address and try again.
                     </div>
                 `;
                 console.error('Token info fetch failed:', error);
